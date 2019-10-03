@@ -39,17 +39,17 @@ catkin_package()
 
 
 
-add_executable(dm_ros_node
+add_executable(dm_ros_nodes
 	  src/main.cpp		
 )  
 
-add_dependencies(dm_ros_node
+add_dependencies(dm_ros_nodes
 ${${PROJECT_NAME}_EXPORTED_TARGETS}
 ${catkin_EXPORTED_TARGETS}
 )
 	 
 	  
-target_link_libraries(dm_ros_node
+target_link_libraries(dm_ros_nodes
 ${catkin_LIBRARIES}
 	##LinStaticLibrary -L/home/lin/dm_ws/src/dm.git/engine/build
 )

@@ -5,13 +5,14 @@
 ./command.sh 
 echo "finish sh"
 
-##compile ros node which use the above project
+##go back to workSpace
 cd ../..
 
+##compile ros node which use the above project
 catkin_make
 echo "finish compilation"
 
 ## run the node 
-rosrun dm_ros dm_ros_node
+rosrun dm_ros dm_ros_nodes
 
 exit 0
