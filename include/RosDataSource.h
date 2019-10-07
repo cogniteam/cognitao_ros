@@ -3,20 +3,47 @@
 #include "ros/ros.h"
 #include "/home/lin/dm_ros/devel/include/dm_ros/EventMsg.h"
 
-namespace rosns{
+
+void doSpin(){
+
+	ros::spin();
+}
 
 class RosDataSource: public  MapThreadSafeDataSource {
 
 
 public:
 
+	RosDataSource() {
+
+		ros::NodeHandle n_;
+
+		event_sub_ = n_.subscribe("/wme_in", 1000,
+				&RosDataSource::callback, this);
+
+		event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme_out", 1000);  
+
+		std::thread spinTHread(doSpin);
+		spinTHread.detach();
+
+		
+
+	}
+	~RosDataSource(){
+
+	}
+
+	
+
+
 	virtual void setVar(std::string variable,std::string value) override{
 		cout<<"enter to setVar "<<std::endl;
-		  sl.lock();
-		  //cout<< "SET [" << variable << "]["  << value <<"]\n";
-		  wm_[variable]=value;
-		  publishEvent(variable,value);
-		  sl.unlock();
+		sl.lock();
+		//cout<< "SET [" << variable << "]["  << value <<"]\n";
+		wm_[variable]=value;
+		//WM::setVar(variable,value);
+		publishEvent(variable,value);
+		sl.unlock();
 
 	}
 	virtual std::string getVar(std::string variable) override{
@@ -42,18 +69,25 @@ public:
 
         msg.key = variable;
         msg.value = value;
-        cout<<"publish msg "<<endl;
+        cout<<"publish msg "<<variable<<", "<<value<<endl;
         event_pub_.publish(msg);
 
-        //ros::spinOnce();
     }
+
+	
+
+	void callback(const dm_ros::EventMsg& msg) {
+		cout<<"set var from callback "<<endl;
+		WM::setVar(msg.key, msg.value);
+	}
+
 
 private:
 
-    ros::NodeHandle n_;
-    ros::Publisher event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme", 1000);    
+    ros::Publisher event_pub_;   
+
+	ros::Subscriber event_sub_;
 
 };
 
 
-}

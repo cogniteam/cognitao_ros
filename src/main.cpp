@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
     std::cout<<"node running"<<std::endl;
     
-	WM::init(new rosns::RosDataSource());
+	WM::init(new RosDataSource());
 
 
 
@@ -28,12 +28,17 @@ int main(int argc, char **argv) {
 	m.addLink(s1,s1,E1);
 	m.addLink(s2,s2,E2);
 
-
 	m.start();
+	// while(true){
 
-	// std::this_thread::sleep_for(std::chrono::seconds(10));
+
+
+
+	// }
+
+	std::this_thread::sleep_for(std::chrono::seconds(40));
 	// //bool lockCoinEvent_,unLockCoinEvent_,unLockPushEvent_,lockPushEvent_;
-	// cout<<" setVar "<<endl;
+	std::cout<<"now need to move---->unlock"<<std::endl;
 	// WM::setVar("COIN","event");
 	// //(m.getState()->getName().compare("unlocked")==0)?
 
