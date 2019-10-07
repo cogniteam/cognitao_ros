@@ -32,8 +32,7 @@ message_generation
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS} 
-	/home/lin/dm_ros/src/cognitao.git/include/
-	/home/lin/dm_ros/src/dm_ros/include/
+	../cognitao.git/include/
 
 	)
 
@@ -62,7 +61,7 @@ ${catkin_EXPORTED_TARGETS}
 	  
 target_link_libraries(dm_ros_nodes
 ${catkin_LIBRARIES}
-	##LinStaticLibrary -L/home/lin/dm_ws/src/dm.git/engine/build
+	
 )
 
 

@@ -1,7 +1,7 @@
 
 #include <CogniTAO.h>
 #include "ros/ros.h"
-#include "/home/lin/dm_ros/devel/include/dm_ros/EventMsg.h"
+#include "../include/dm_ros/EventMsg.h"
 
 
 void doSpin(){
@@ -14,14 +14,15 @@ class RosDataSource: public  MapThreadSafeDataSource {
 
 public:
 
-	RosDataSource() {
+	RosDataSource(int argc, char **argv) {
 
+		ros::init(argc, argv, "DMS");
 		ros::NodeHandle n_;
 
-		event_sub_ = n_.subscribe("/wme_in", 1000,
+		event_sub_ = n_.subscribe("/wme/in", 1000,
 				&RosDataSource::callback, this);
 
-		event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme_out", 1000);  
+		event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme/out", 1000);  
 
 		std::thread spinTHread(doSpin);
 		spinTHread.detach();
@@ -39,9 +40,7 @@ public:
 	virtual void setVar(std::string variable,std::string value) override{
 		cout<<"enter to setVar "<<std::endl;
 		sl.lock();
-		//cout<< "SET [" << variable << "]["  << value <<"]\n";
 		wm_[variable]=value;
-		//WM::setVar(variable,value);
 		publishEvent(variable,value);
 		sl.unlock();
 
@@ -51,8 +50,6 @@ public:
 		sl.lock_shared();
 		ret = wm_[variable];
 		sl.unlock_shared();
-		//cout<< "READ [" << variable <<"]\n";
-		//cout<< "GET [" << ret <<"]\n";
 		return ret;
 
 	}
@@ -77,7 +74,6 @@ public:
 	
 
 	void callback(const dm_ros::EventMsg& msg) {
-		cout<<"set var from callback "<<endl;
 		WM::setVar(msg.key, msg.value);
 	}
 

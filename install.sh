@@ -2,7 +2,7 @@
 ##run a script which download from git the update version of dm project
 
 
-./command.sh 
+./cogniTao_Install.sh 
 echo "finish sh"
 
 ##go back to workSpace
@@ -12,7 +12,6 @@ cd ../..
 catkin_make
 echo "finish compilation"
 
-## run the node 
-rosrun dm_ros dm_ros_nodes
+
 
 exit 0

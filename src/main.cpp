@@ -4,15 +4,15 @@
 #include <iostream>
 #include <CogniTAO.h>
 #include "ros/ros.h"
-#include "/home/lin/dm_ros/src/dm_ros/include/RosDataSource.h"
+#include "../include/RosDataSource.h"
 
 int main(int argc, char **argv) {
 
-    ros::init(argc, argv, "some_node");
+    
 
     std::cout<<"node running"<<std::endl;
     
-	WM::init(new RosDataSource());
+	WM::init(new RosDataSource(argc, argv));
 
 
 
