@@ -14,7 +14,8 @@ int main(int argc, char **argv) {
     
 	WM::init(new RosDataSource(argc, argv));
 
-
+	UILink link_("/home/lin/dm_ros/src/cognitao.git/www");
+	link_.start();
 
 	auto s1 = new State("locked");
 	auto s2 = new State("unlocked");
@@ -22,28 +23,35 @@ int main(int argc, char **argv) {
 	Machine m;
 	auto E1 = new ProtocolTransition ("PUSH");
 	auto E2 = new ProtocolTransition ("COIN");
+
+	auto E3 = new ProtocolTransition ("PUSH_BACK");
+	auto E4 = new ProtocolTransition ("COIN_BACK");
 	m.setInitialTask(s1);
-	m.addLink(s1,s2,E2);
+	
 	m.addLink(s2,s1,E1);
-	m.addLink(s1,s1,E1);
-	m.addLink(s2,s2,E2);
+	
+	m.addLink(s2,s2,E4);
+	m.addLink(s1,s2,E2);
+	m.addLink(s1,s1,E3);
+
+
+	Task * stateS1 =TaskFactory::createTask("state","root");
+	stateS1->setMachine(&m);
+	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
+
+
+
+
+	// cout<<StateJSONWriter::toString(stateS1)<<endl;
+
+
 
 	m.start();
-	// while(true){
-
-
-
-
-	// }
 
 	std::this_thread::sleep_for(std::chrono::seconds(40));
-	// //bool lockCoinEvent_,unLockCoinEvent_,unLockPushEvent_,lockPushEvent_;
-	std::cout<<"now need to move---->unlock"<<std::endl;
-	// WM::setVar("COIN","event");
-	// //(m.getState()->getName().compare("unlocked")==0)?
-
-
-
-
+	cout<<" stop everything "<<endl;
+	m.stop();
+	link_.stop();
+	exit(0);
     return 0;
 }

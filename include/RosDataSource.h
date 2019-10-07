@@ -24,14 +24,14 @@ public:
 
 		event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme/out", 1000);  
 
-		std::thread spinTHread(doSpin);
+		spinTHread = std::thread(doSpin);
 		spinTHread.detach();
 
 		
 
 	}
 	~RosDataSource(){
-
+		spinTHread.join(); 
 	}
 
 	
@@ -83,6 +83,8 @@ private:
     ros::Publisher event_pub_;   
 
 	ros::Subscriber event_sub_;
+
+	std::thread spinTHread;
 
 };
 
