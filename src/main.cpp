@@ -21,11 +21,11 @@ int main(int argc, char **argv) {
 	auto s2 = new State("unlocked");
 
 	Machine m;
-	auto E1 = new ProtocolTransition ("PUSH");
-	auto E2 = new ProtocolTransition ("COIN");
+	auto E1 = new ProtocolTransition ({"PUSH"});
+	auto E2 = new ProtocolTransition ({"COIN"});
 
-	auto E3 = new ProtocolTransition ("PUSH_BACK");
-	auto E4 = new ProtocolTransition ("COIN_BACK");
+	auto E3 = new ProtocolTransition ({"PUSH_BACK"});
+	auto E4 = new ProtocolTransition ({"COIN_BACK"});
 	m.setInitialTask(s1);
 	
 	m.addLink(s2,s1,E1);
