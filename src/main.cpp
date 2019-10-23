@@ -13,8 +13,9 @@ int main(int argc, char **argv) {
     std::cout<<"node running"<<std::endl;
     
 	WM::init(new RosDataSource(argc, argv));
+	
 
-	UILink link_("/home/lin/dm_ros/src/cognitao.git/www");
+	UILink link_("src/cognitao.git/www/","127.0.0.1",1234);
 	link_.start();
 
 	auto s1 = new State("locked");
