@@ -1,3 +1,8 @@
+<div align="center">
+  <img src="/ros.jpeg"><br><br>
+</div>
+
+-----------------
 
 # DM_ROS
 Decision making system (for implementing reactive planning architectures) proxy for ROS.
