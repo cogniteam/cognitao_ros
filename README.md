@@ -8,7 +8,7 @@ For more information about CogniTAO decision making system see-[https://git.cogn
 - [Integration](#integration)
 - [Prerequisites](#prerequisites)
 - [RosDataSource](#send\geT-events)
-
+- [Contributing](#contributing)
 ## Getting atarted
 First, create your own workspace.
 The next step is to download the project into the src directory.
