@@ -4,10 +4,10 @@
 
 -----------------
 
-# DM_ROS
-Decision making system (for implementing reactive planning architectures) proxy for ROS.
+# COGNITAO_ROS
+Decision making system implementation interface and proxy for ROS.
 
-For more information about CogniTAO decision making system see-[https://git.cogni.io/cognitao/dm/blob/master/README.md] 
+For more information about CogniTAO decision making system see-[https://github.com/cogniteam/cognitao] 
 
 - [Getting Started](#getting-started)
 - [Integration](#integration)
@@ -19,29 +19,27 @@ First, create your own workspace.
 The next step is to download the project into the src directory.
 To get a copy of the project up and running on your local machine use Download button.
 
-If you work on linux you can clone it via terminal to your Home personal folder :
+Clone using :
 ```
-git clone "https://git.cogni.io/cognitao/dm_ros.git"
+git clone "https://github.com/cogniteam/cognitao_ros.git"
 ```
-The project is now located in your workspace [src/dm_ros].
-To get CogniTAO library you need to use the install.sh script which located in[yourWorkspace/src/dm_ros].
-In order to run this script you need to get in to[yourWorkspace/src/dm_ros].
-For linux users:
+
+Install the CogniTAO library using install.sh script located in[yourWorkspace/src/cognitao_ros].
 ```
-cd yourWorkspace/src/dm_ros
+cd yourWorkspace/src/cognitao_ros
 
 //run the install.sh script
 ./install.sh
 ```
 The install.sh script:
-- runs another script that downloads the most updated version of the project from the site.
-- compile the project.
+- Downloads the CogniTAO library.
+- Compiles the project.
 
-After the script is run the project will be placed in [yourWorkspace/src/cognitao.git].
+After the script is ran the project will be placed in [yourWorkspace/src/cognitao.git].
 
 ## Integration
 
-To use our library in your workspace add to your project file:
+To use the CogniTAO library in your workspace add to your project file:
 ```
 #include <CogniTAO.h>
 ```
@@ -58,13 +56,13 @@ add_executable(dm_ros_node
 C++11 support, ROS.
 
 ## RosDataSource 
-In your node- use the RosDataSource structer.
+For the worldM<odel ROS interface- use the RosDataSource when initializing the World Model.
 ```
 WM::init(new RosDataSource(argc, argv));
 ```
 
-The RosDataSource object listening to topic called "/wme/out".
-When someone publish event to this topic, the RosDataSource get the message and set the key-value parameters.
+The RosDataSource object listens to a topic called "/wme/out".
+When someone publishes an event to this topic, the RosDataSource gets the message and sets the key-value parameters.
 To publish via terminal:
 ```
 rostopic pub /wme/in dm_ros/EventMsg '{key: COIN, value: ENT}'
