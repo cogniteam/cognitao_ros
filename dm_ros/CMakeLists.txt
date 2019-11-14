@@ -1,51 +1,32 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(dm_ros)
 
-
 add_compile_options(-std=c++11)
-
-#execute_process(
-# 	COMMAND bash /home/lin/dm_ws/src/dm_ros/command.sh 
-# 	RESULT_VARIABLE TFLITE_SCRIPT_RESULT 
-#)
-
-
-
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  std_msgs 
+  std_msgs
+  actionlib_msgs
+  dynamic_reconfigure
+  message_generation
+  actionlib
 )
 
-
-
-
-
-find_package(catkin REQUIRED COMPONENTS
-roscpp
-dynamic_reconfigure
-std_msgs
-message_generation
-)
-
+add_action_files(DIRECTORY ../action_manager/action FILES ActionMsg.action)
+find_package(catkin REQUIRED genmsg actionlib_msgs actionlib)
 
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS} 
-	../cognitao.git/include/
-
-	)
-
+	../../cognitao.git/include/
+)
 
 add_message_files(
   FILES
   EventMsg.msg
 )
 
-generate_messages(
-  #DEPENDENCIES
-)
-
+generate_messages(DEPENDENCIES actionlib_msgs)
 catkin_package()
 
 
