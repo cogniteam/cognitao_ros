@@ -21,12 +21,14 @@ To get a copy of the project up and running on your local machine use Download b
 
 Clone using :
 ```
+mkdir -p cognitao_ws/src
+cd cognitao_ws/src
 git clone "https://github.com/cogniteam/cognitao_ros.git"
 ```
 
 Install the CogniTAO library using install.sh script located in[yourWorkspace/src/cognitao_ros].
 ```
-cd yourWorkspace/src/cognitao_ros
+cd cognitao_ros
 
 //run the install.sh script
 ./install.sh

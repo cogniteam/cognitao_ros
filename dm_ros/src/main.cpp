@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -34,7 +33,7 @@ int main(int argc, char **argv) {
 	m.addLink(s1,s2,E2);
 
 
-	Task * stateS1 =TaskFactory::createTask("state","root");
+	State * stateS1 = (State*) TaskFactory::createTask("state","root");
 	stateS1->setMachine(&m);
 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
 
