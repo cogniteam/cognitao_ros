@@ -35,6 +35,7 @@ case DriveForward_FORVER :
       
             cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
             server.setAborted();
+            result.resultvalue = false;
             return;
           }
         }
@@ -51,6 +52,8 @@ case DriveBackward_FORVER:
       
             cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
             server.setAborted();
+            result.resultvalue = false;
+
             return;
           }
         }
@@ -65,6 +68,7 @@ case DriveBackward_FORVER:
       
             cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
             server.setAborted();
+            result.resultvalue = false;
             return;
           }
         }
@@ -82,6 +86,7 @@ case DriveBackward_FORVER:
       
             cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
             server.setAborted();
+            result.resultvalue = false;
             return;
           }
         }
@@ -96,7 +101,7 @@ cout<<"nothing "<<endl;
 if (ros::ok()){
     std::cout<<" GOAL IS DONE!!"<<std::endl;
     result.resultvalue = returnValue;
-    cout<<"result value in Server: "<<result.resultvalue<<endl;
+    cout<<"result value in Server: "<<int(result.resultvalue)<<endl;
 
     server.setSucceeded(result);
 }

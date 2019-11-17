@@ -8,11 +8,10 @@ using actionGoal=action_manager::ActionMsgGoal;
 using actionFeedback=action_manager::ActionMsgFeedbackConstPtr;
 typedef actionlib::SimpleActionClient<action_manager::ActionMsgAction> CL;
 
-class StateRosProxy:  public State {
-
+class StateThreadRosProxy: public StateThread {
 public:
 
-    StateRosProxy(string name):State(name), client_("action_manager", true){	
+    StateThreadRosProxy(string name):StateThread(name), client_("action_manager", true){	
         actionType_ =  name;          
     }
     void feedbackCb(const actionFeedback& feedback) {
@@ -28,27 +27,35 @@ public:
         actionGoal goal;
         goal.actiontype=actionType_;
         
-        client_.sendGoal(goal,boost::bind(&StateRosProxy::doneCb, this, _1, _2),
+        client_.sendGoal(goal,boost::bind(&StateThreadRosProxy::doneCb, this, _1, _2),
                  CL::SimpleActiveCallback(),
-               boost::bind(&StateRosProxy::feedbackCb, this, _1));
+               boost::bind(&StateThreadRosProxy::feedbackCb, this, _1));
          //    client_.sendGoal(goal);
-        run();            
+
+        StateThread::onStart();          
 	
 	}
 
     virtual void run() override{
+        ros::Rate loop_rate(1);
+        int count = 0;
+        while(!stopRequested) {
+            count++;
+			std::cout<<count<<" stopRequested is "<<stopRequested<<endl;;
+            loop_rate.sleep();
+		}
+        cout<<" stopRequested "<<endl;
 
-        client_.waitForResult();
-            
-        if (client_.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-        printf("action complete!");
+    }
+        virtual void onStop() override{
 
-        printf("Current State: %s\n", client_.getState().toString().c_str());
-            
-	}
+        StateThread::onStop();
+        client_.cancelGoal();
+        ROS_INFO("goal is being canceled");
+        
+    }
 
-private:
+    private:
     string actionType_;
     actionlib::SimpleActionClient<action_manager::ActionMsgAction> client_;
 };
-
