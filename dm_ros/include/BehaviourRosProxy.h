@@ -39,10 +39,10 @@ public:
 private:
 
     void feedbackCb(const actionFeedback& feedback) {
-    cout<<" get feedback "<<endl; 
+        //cout<<" get feedback "<<endl; 
     }   
     void doneCb(const actionlib::SimpleClientGoalState& state,const action_manager::ActionMsgResultConstPtr& result) {
-    std::cout<<"the result is :" <<result->resultvalue<<std::endl;
+        //std::cout<<"the result is :" <<(int)result->resultvalue<<std::endl;
     }   
     string actionType_;
     actionlib::SimpleActionClient<action_manager::ActionMsgAction> client_;

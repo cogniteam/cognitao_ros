@@ -1,4 +1,8 @@
 #include <MinimalActionServer.h>
+
+#include <thread>
+
+
 using namespace std;
 enum action_code {
     DriveForward_FORVER,
@@ -16,95 +20,114 @@ public:
     :MinimalActionServer(){
     }
 
-virtual void execute(const actionlib::SimpleActionServer<action_manager::ActionMsgAction>::GoalConstPtr& goal) override{
-const string goal_ = goal->actiontype;
-bool returnValue= true;
-ros::Rate loop_rate(1);
-action_code g=hashit(goal_);
-action_manager::ActionMsgResult result;
-action_manager::ActionMsgFeedback feedback;
+virtual void execute(const actionlib::MultiGoalActionServer<action_manager::ActionMsgAction>::GoalHandle& goal) override{
+  cout<<" start execute "<<goal.getGoal()->actiontype<<endl;
+  const string goal_ = goal.getGoal()->actiontype;
+  bool returnValue= true;
+  ros::Rate loop_rate(1);
+  action_code g=hashit(goal_);
+  action_manager::ActionMsgResult result;
+  action_manager::ActionMsgFeedback feedback;
 
-switch (g)
-{
-case DriveForward_FORVER :
-    for(;;){
-          cout<<" im driving foraward now"<<endl;
-          server.publishFeedback(feedback);
-          loop_rate.sleep();
-          if (server.isPreemptRequested()) {
-      
-            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
-            server.setAborted();
-            result.resultvalue = false;
-            return;
-          }
-        }
-        break;
+  switch (g){
 
-case DriveBackward_FORVER:
+  case DriveForward_FORVER :
+      for(;;){
+            cout<<" im driving foraward now"<<endl;
+            // server.publishFeedback(feedback);
+            loop_rate.sleep();
+            if (server.isPreemptRequested(goal)) {
         
-        for(;;){
-          cout<<" im driving backward now"<<endl;
-          server.publishFeedback(feedback);
-          loop_rate.sleep();
+            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
+            result.resultvalue = true;
+            if (result.resultvalue == false){
+                cout<<"false "<<endl;
+            } else if (result.resultvalue == true){
+                cout<<"true "<<endl;
+            }
+            std::cout<<"realtime "<<&result<<(int)result.resultvalue<<endl;
+            server.setAborted(goal,result);
+            //   if (ros::ok()){
+            //     std::cout<<" GOAL IS DONE!!"<<std::endl;
+            //     result.resultvalue = returnValue;
+            //     cout<<"result value in Server: "<<int(result.resultvalue)<<endl;
+
+            //     server.setSucceeded(goal,result);
+            //   }
+              return;
+            }
+          }
+          break;
+
+  case DriveBackward_FORVER:
           
-          if (server.isPreemptRequested()) {
-      
-            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
-            server.setAborted();
-            result.resultvalue = false;
-
-            return;
-          }
-        }
-        break;
-      case DriveBackward_With_Timer:
+          for(;;){
+            cout<<" im driving backward now"<<endl;
+            // server.publishFeedback(feedback);
+            loop_rate.sleep();
+            
+            if (server.isPreemptRequested(goal)) {
         
-        for(int i = 0; i < 20; i++){
-          cout<<" im driving backward WITH_TIMER now"<<i<<endl;
-          server.publishFeedback(feedback);
-          loop_rate.sleep();
-          if (server.isPreemptRequested()) {
-      
-            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
-            server.setAborted();
             result.resultvalue = false;
-            return;
-          }
-        }
-        // set return value for BehaviourRosProxy
-        break; 
-         
+            server.setAborted(goal,result,"1");
 
-       case DriveForward_With_Timer:
+              
+            std::cout<<"PREEMPT IS::::: "<<server.isPreemptRequested(goal);
+
+               return;
+            }
+          }
+          break;
+        case DriveForward_With_Timer:
+          
+          for(int i = 0; i < 20; i++){
+            cout<<" im driving forward WITH_TIMER now"<<i<<endl;
+            // server.publishFeedback(feedback);
+            loop_rate.sleep();
+            if (server.isPreemptRequested(goal)) {
         
-        for(int i = 0; i < 20; i++){
-          cout<<" im driving forward WITH_TIMER now"<<i<<endl;
-          server.publishFeedback(feedback);
-          loop_rate.sleep();
-          if (server.isPreemptRequested()) {
-      
-            cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
-            server.setAborted();
-            result.resultvalue = false;
-            return;
+              cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
+              result.resultvalue = false;
+              server.setAborted(goal,result);
+              
+              return;
+            }
           }
-        }
-        // set return value for BehaviourRosProxy
-        break; 
-         
+          // set return value for BehaviourRosProxy
+          break; 
+          
 
-default:
-cout<<"nothing "<<endl;
-    break;
-}
-if (ros::ok()){
-    std::cout<<" GOAL IS DONE!!"<<std::endl;
-    result.resultvalue = returnValue;
-    cout<<"result value in Server: "<<int(result.resultvalue)<<endl;
+        case DriveBackward_With_Timer:
+          
+          for(int i = 0; i < 20; i++){
+            cout<<" im driving backward WITH_TIMER now"<<i<<endl;
+            // server.publishFeedback(feedback);
+            loop_rate.sleep();
+            if (server.isPreemptRequested(goal)) {
+        
+              cout<<"DriveForward_FORVER --->Goal Canceled "<<endl;
+              result.resultvalue = returnValue;
+              server.setAborted(goal,result);
+              return;
+            }
+          }
+          // set return value for BehaviourRosProxy
+          break; 
+          
 
-    server.setSucceeded(result);
-}
+  default:
+  cout<<"nothing "<<endl;
+      break;
+  }
+  cout<<"im hereeee"<<std::endl;
+  if (ros::ok()){
+      std::cout<<" GOAL IS DONE!!"<<std::endl;
+      result.resultvalue = false;
+      cout<<"result value in Server: "<<int(result.resultvalue)<<endl;
+      std::cout<<"2.PREEMPT IS ::::: "<<server.isPreemptRequested(goal);
+
+      server.setSucceeded(goal,result);
+  }
 }
 
 action_code hashit (std::string const& inString) {
@@ -114,5 +137,8 @@ action_code hashit (std::string const& inString) {
     if (inString == "DriveForward_With_Timer") return DriveForward_With_Timer;
   }
   private: 
+
+      std::thread stopReqThread_;
+
   
 };

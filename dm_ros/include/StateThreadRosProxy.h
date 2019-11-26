@@ -1,4 +1,4 @@
-#include <action_manager/ActionMsgAction.h> // Note: "Action" is appended
+#include <action_manager/ActionMsgAction.h>
 #include <actionlib/client/simple_action_client.h>
 
 #include <CogniTAO.h>
