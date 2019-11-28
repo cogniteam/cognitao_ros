@@ -6,7 +6,7 @@ echo "starting"
 
 declare -a arr="https://github.com/cogniteam/cognitao.git"
 echo "remove old version"
-cd ..
+#cd ..
 
 ## Folder to store each of these git repos
 folder=$(pwd)

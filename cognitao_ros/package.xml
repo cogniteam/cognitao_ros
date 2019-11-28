@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>dm_ros</name>
+  <name>cognitao_ros</name>
   <version>0.0.0</version>
-  <description>The dm_ros package</description>
+  <description>The cognitao_ros package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

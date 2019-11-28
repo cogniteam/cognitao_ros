@@ -1,7 +1,8 @@
 
 #include <CogniTAO.h>
 #include "ros/ros.h"
-#include "../include/dm_ros/EventMsg.h"
+
+#include "../../../../devel/include/cognitao_ros/EventMsg.h"
 
 
 void doSpin(){
@@ -22,7 +23,7 @@ public:
 		event_sub_ = n_.subscribe("/wme/in", 1000,
 				&RosDataSource::callback, this);
 
-		event_pub_ = n_.advertise<dm_ros::EventMsg>("/wme/out", 1000);  
+		event_pub_ = n_.advertise<cognitao_ros::EventMsg>("/wme/out", 1000);  
 
 		spinTHread = std::thread(doSpin);
 		spinTHread.detach();
@@ -62,7 +63,7 @@ public:
 
     void publishEvent(std::string variable,std::string value) {
 
-        dm_ros::EventMsg msg;
+        cognitao_ros::EventMsg msg;
 
         msg.key = variable;
         msg.value = value;
@@ -73,7 +74,7 @@ public:
 
 	
 
-	void callback(const dm_ros::EventMsg& msg) {
+	void callback(const cognitao_ros::EventMsg& msg) {
 		WM::setVar(msg.key, msg.value);
 	}
 
