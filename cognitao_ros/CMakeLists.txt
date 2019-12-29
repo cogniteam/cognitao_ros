@@ -10,10 +10,11 @@ find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   message_generation
   actionlib 
+  genmsg
+  actionlib_msgs 
 )
 
-add_action_files(DIRECTORY ../action_manager/action FILES ActionMsg.action)
-find_package(catkin REQUIRED genmsg actionlib_msgs actionlib)
+find_package(catkin REQUIRED )
 
 include_directories(
 	include
@@ -24,15 +25,21 @@ include_directories(
 add_message_files(
   FILES
   EventMsg.msg
+  KeyValue.msg
+  GoalMsg.msg
+
 )
 
-generate_messages(DEPENDENCIES actionlib_msgs)
-catkin_package()
+
+
+add_action_files(DIRECTORY action FILES ActionMsg.action)
 
 
 add_executable(cognitao_ros_node
 	  src/main.cpp		
 )  
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
+catkin_package()
 
 add_dependencies(cognitao_ros_node
 ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -45,6 +52,10 @@ ${catkin_LIBRARIES}
 	
 )
 
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
 
 
 

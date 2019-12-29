@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   message_generation
   actionlib
+  cognitao_ros
 )
 
 find_package(catkin REQUIRED genmsg actionlib_msgs actionlib)
@@ -22,10 +23,10 @@ include_directories(
 	../cognitao_ros_action_server/include/
 )
 
-add_action_files(DIRECTORY ../action_manager/action FILES ActionMsg.action)
+add_action_files(DIRECTORY ../cognitao_ros/action FILES ActionMsg.action)
 
 
-generate_messages(DEPENDENCIES actionlib_msgs)
+generate_messages(DEPENDENCIES actionlib_msgs cognitao_ros)
 add_executable(action_server src/main.cpp)
 catkin_package(
 #  INCLUDE_DIRS include

@@ -1,5 +1,5 @@
 # Goal
-string actiontype 
+cognitao_ros/GoalMsg goal 
 ---
 # Result
 bool resultvalue

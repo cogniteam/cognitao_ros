@@ -1,16 +1,16 @@
-#include <action_manager/ActionMsgAction.h> // Note: "Action" is appended
+#include <cognitao_ros/ActionMsgAction.h> // Note: "Action" is appended
 #include <actionlib/client/simple_action_client.h>
 
 #include <CogniTAO.h>
 
 using namespace std;
-using actionType=action_manager::ActionMsgAction;
-typedef actionlib::SimpleActionClient<action_manager::ActionMsgAction> CL;
+using actionType=cognitao_ros::ActionMsgAction;
+typedef actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> CL;
 
 class BehaviourRosProxy:  public Behaviour {
 
 public:
-    BehaviourRosProxy(string name):Behaviour(name), client_("action_manager", true){
+    BehaviourRosProxy(string name):Behaviour(name), client_("cognitao_ros", true){
         actionType_ =  name;
     }
 
@@ -31,7 +31,7 @@ public:
 
     virtual bool action() override {
         client_.waitForResult();
-        action_manager::ActionMsgResultConstPtr result =client_.getResult();
+        cognitao_ros::ActionMsgResultConstPtr result =client_.getResult();
         return result->resultvalue;
     }
 
@@ -41,9 +41,9 @@ private:
     void feedbackCb(const actionFeedback& feedback) {
         //cout<<" get feedback "<<endl; 
     }   
-    void doneCb(const actionlib::SimpleClientGoalState& state,const action_manager::ActionMsgResultConstPtr& result) {
+    void doneCb(const actionlib::SimpleClientGoalState& state,const cognitao_ros::ActionMsgResultConstPtr& result) {
         //std::cout<<"the result is :" <<(int)result->resultvalue<<std::endl;
     }   
     string actionType_;
-    actionlib::SimpleActionClient<action_manager::ActionMsgAction> client_;
+    actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> client_;
 };
