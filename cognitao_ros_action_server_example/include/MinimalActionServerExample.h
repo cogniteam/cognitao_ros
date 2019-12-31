@@ -43,6 +43,14 @@ public:
       for (;;)
       {
         cout << " im driving foraward now" << endl;
+        cout << "got params: " << endl;
+        for (auto const &param : parameters)
+        {
+
+          cout<<"P1: " <<param.first<<"P2: "<<param.second<<" "<<endl;
+        }
+
+
         // server.publishFeedback(feedback);
         loop_rate.sleep();
         if (server.isPreemptRequested(goal))

@@ -1,5 +1,3 @@
-
-
 #include <cognitao_ros/ActionMsgAction.h>
 #include "MultiGoalActionServer.h"
 
@@ -25,9 +23,7 @@ public:
     server.start(); //start the server running
   }
 
-  ~MinimalActionServer(void)
-  {
-  }
+  ~MinimalActionServer(void){}
 
   virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
   {

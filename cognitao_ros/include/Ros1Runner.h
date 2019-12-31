@@ -26,9 +26,8 @@ public:
         for (int i = 0; i < 10; i++)
         {
             loop_rate.sleep();
-            cout << "in loop " << i << endl;
         }
-        cout << "outttttttt of loop" << endl;
+
         stopRequested = true;
     }
     virtual bool run()

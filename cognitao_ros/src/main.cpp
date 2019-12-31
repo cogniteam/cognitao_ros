@@ -12,14 +12,16 @@ int main(int argc, char **argv)
 {
 	WM::init(new RosDataSource(argc, argv));
 	std::cout << "node running" << std::endl;
-	map<std::string, std::string> map_;
+	map<std::string, std::string> map_1;
+	map_1["param1"]="lin";
+	map_1["param2"]="yakir";
 	Task *task1 = new BehaviourTask("DriveForward_FORVER");
-	auto runner = new Ros1Runner("DriveForward_FORVER", map_);
+	auto runner = new Ros1Runner("DriveForward_FORVER", map_1);
 	task1->setRunner(runner);
 	task1->start();
 
 	Task *task2 = new BehaviourTask("DriveBackward_With_Timer");
-	auto runner2 = new Ros1Runner("DriveBackward_With_Timer", map_);
+	auto runner2 = new Ros1Runner("DriveBackward_With_Timer", map_1);
 	task2->setRunner(runner2);
 	task2->start();
 	
