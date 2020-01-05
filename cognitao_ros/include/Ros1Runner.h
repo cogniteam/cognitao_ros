@@ -19,17 +19,17 @@ public:
         paramMap = parameters;
     }
 
-    void loopStopReq()
-    {
+    // void loopStopReq()
+    // {
 
-        ros::Rate loop_rate(2);
-        for (int i = 0; i < 10; i++)
-        {
-            loop_rate.sleep();
-        }
+    //     ros::Rate loop_rate(2);
+    //     for (int i = 0; i < 10; i++)
+    //     {
+    //         loop_rate.sleep();
+    //     }
 
-        stopRequested = true;
-    }
+    //     stopRequested = true;
+    // }
     virtual bool run()
     {
         client_.waitForServer();
@@ -48,8 +48,8 @@ public:
                          CL::SimpleActiveCallback(),
                          boost::bind(&Ros1Runner::feedbackCb, this, _1));
 
-        stopReqThread_ = std::thread(&Ros1Runner::loopStopReq, this);
-        stopReqThread_.detach();
+        // stopReqThread_ = std::thread(&Ros1Runner::loopStopReq, this);
+        // stopReqThread_.detach();
 
         ros::Rate loop_rate(1);
         cognitao_ros::ActionMsgResultConstPtr res = client_.getResult();
@@ -92,7 +92,7 @@ public:
 
         return result->resultvalue;
     }
-    virtual std::string getType() { return "ROS1RUNNER"; };
+    virtual std::string getType() { return "ros1"; };
     virtual void stop()
     {
         stopRequested = true;
@@ -109,7 +109,7 @@ private:
         existRes = true;
     }
     actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> client_;
-    std::thread stopReqThread_;
+    // std::thread stopReqThread_;
     bool existRes = false;
     atomic<bool> stopRequested;
     std::map<std::string, std::string> paramMap;

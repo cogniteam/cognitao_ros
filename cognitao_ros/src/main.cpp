@@ -7,112 +7,84 @@
 #include <actionlib/client/simple_action_client.h>
 #include <cognitao_ros/ActionMsgAction.h>
 #include "../include/Ros1Runner.h"
+#include "../include/Ros1RunnerFactoryMethod.h"
 
+class UserFunctions
+{
+public:
+	bool wait(BehaviourTask *b)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		return true;
+	}
+
+	bool generateRandom(BehaviourTask *b)
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		srand(seed);
+		int rnd = (rand() % 9) + 1;
+		WM::setVar("random", StringGenerator::itos(rnd));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		return true;
+	}
+
+	bool loop10(BehaviourTask *b)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			WM::setVar("loop", StringGenerator::itos(i));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		}
+		return true;
+	}
+
+	bool waitRandom(BehaviourTask *b)
+	{
+		std::string rnd = WM::getVar("random");
+		// std::this_thread::sleep_for(std::chrono::seconds(stoi(rnd)));
+		std::this_thread::sleep_for(std::chrono::seconds(stoi("hello")));
+		return true;
+	}
+};
 int main(int argc, char **argv)
 {
-	WM::init(new RosDataSource(argc, argv));
 	std::cout << "node running" << std::endl;
-	map<std::string, std::string> map_1;
-	map_1["param1"]="lin";
-	map_1["param2"]="yakir";
-	Task *task1 = new BehaviourTask("DriveForward_FORVER");
-	auto runner = new Ros1Runner("DriveForward_FORVER", map_1);
-	task1->setRunner(runner);
-	task1->start();
 
-	Task *task2 = new BehaviourTask("DriveBackward_With_Timer");
-	auto runner2 = new Ros1Runner("DriveBackward_With_Timer", map_1);
-	task2->setRunner(runner2);
-	task2->start();
-	
-	std::this_thread::sleep_for(std::chrono::seconds(1000));
+	auto userFunctions = new UserFunctions();
 
-	// UILink link_("src/cognitao.git/www/","127.0.0.1",1234);
-	// link_.start();
+	WM::init(new RosDataSource(argc, argv));
 
-	// bool USE_STATE = false;
-	// bool USE_STATE_THREAD = false;
-	// bool USE_BEHAVIOUR = false;
-	// bool USE_BEHAVIOUR_THREAD = true;
+	Action::registerAction("wait", &UserFunctions::wait, userFunctions);
+	Action::registerAction("generateRandom", &UserFunctions::generateRandom, userFunctions);
+	Action::registerAction("loop10", &UserFunctions::loop10, userFunctions);
+	Action::registerAction("waitRandom", &UserFunctions::waitRandom, userFunctions);
 
-	// if (USE_STATE ){
-	// 	auto s1 = new StateRosProxy("DriveForward_With_Timer");
+	RunnerFactory::registerFactoryMethod("ros1", new Ros1RunnerFactoryMethod());
 
-	// 	auto s2 = new StateRosProxy("DriveBackward_With_Timer");
+	Config config("src/cognitao_ros/cognitao_ros/ros_config_debug.json");
 
-	// 	Machine m;
-	// 	auto E1 = new ProtocolTransition ({"TO_DriveForward"});
-	// 	auto E2 = new ProtocolTransition ({"TO_DriveBackward"});
-	// 	m.setInitialTask(s1);
+	//update WM variables from config
+	for (auto elem : config.getWmElements())
+	{
+		WM::setVar(elem.first, elem.second);
+	}
 
-	// 	m.addLink(s2,s1,E1);
-	// 	m.addLink(s1,s2,E2);
+	// read machine from XML
+	Machine *m = MachineXMLReader::read(config.getMachineXmlPath());
 
-	// 	State * stateS1 = (State*) TaskFactory::createTask("state","root");
-	// 	stateS1->setMachine(&m);
-	// 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
 
-	// 	// cout<<StateJSONWriter::toString(stateS1)<<endl;
+	//create WebServer instance with a machine
+	MachineWebServer w(
+		config.getWebServerBasePath(),
+		config.getWebServerIp(),
+		config.getWebServerPort(), m);
 
-	// 	m.start();
+	m->start();
 
-	// 	std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	cout<<" stop everything "<<endl;
-	// 	m.stop();
-	// 	link_.stop();
-	// }
-
-	// if (USE_STATE_THREAD ){
-
-	// 	auto s1 = new StateThreadRosProxy("DriveForward_FORVER");
-	// 	auto s2 = new StateThreadRosProxy("DriveBackward_FORVER");
-	// 	Machine m;
-	// 	auto E1 = new ProtocolTransition ({"TO_DriveForward"});
-	// 	auto E2 = new ProtocolTransition ({"TO_DriveBackward"});
-	// 	m.setInitialTask(s1);
-
-	// 	m.addLink(s2,s1,E1);
-	// 	m.addLink(s1,s2,E2);
-	// 	State * stateS1 = (State*) TaskFactory::createTask("state","root");
-	// 	stateS1->setMachine(&m);
-	// 	WM::setVar("GRAPH", StateJSONWriter::toString(stateS1)  );
-	// 	m.start();
-	// 	std::this_thread::sleep_for(std::chrono::seconds(1000));
-	// 	m.stop();
-	// 	link_.stop();
-	// }
-
-	// 	if (USE_BEHAVIOUR){
-	// 	auto s1 = new BehaviourRosProxy("DriveForward_With_Timer");
-	// 	auto s2 = new BehaviourRosProxy("DriveBackward_With_Timer");
-
-	// 	Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("seq","root");
-	// 	BehaviourS1->addChild(s1);
-	// 	BehaviourS1->addChild(s2);
-
-	// 	WM::setVar("GRAPH", GraphJSONWriter::toString(BehaviourS1)  );
-
-	// 	BehaviourS1->start();
-
-	// 	link_.stop();
-	// }
-
-	// if (USE_BEHAVIOUR_THREAD){
-	// 	cout<<"lin"<<endl;
-	// 	auto s1 = new BehaviourThreadRosProxy("DriveForward_FORVER");
-	// 	auto s2 = new BehaviourThreadRosProxy("DriveBackward_FORVER");
-
-	// 	Behaviour * BehaviourS1 = (Behaviour*) TaskFactory::createTask("par","root");
-	// 	BehaviourS1->addChild(s1);
-	// 	BehaviourS1->addChild(s2);
-
-	// 	WM::setVar("GRAPH", GraphJSONWriter::toString(BehaviourS1)  );
-
-	// 	BehaviourS1->start();
-	// 	cout<<"BehaviourS1 "<<BehaviourS1->getReturn();
-
-	// 	link_.stop();
-	// }
+	while (true) //!m->getCurrentState()->hasReturn())
+	{
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 
 	exit(0);
 	return 0;

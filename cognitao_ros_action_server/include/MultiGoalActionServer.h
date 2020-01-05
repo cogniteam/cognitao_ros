@@ -141,6 +141,7 @@ public:
     }
     void requestPreemption(GoalHandle gh)
     {
+        cout << "-------------------requestPreemption-------------------" << std::endl;
         typename GoalQueue::iterator g = active_goals.find(gh);
         if (g != active_goals.end())
         {

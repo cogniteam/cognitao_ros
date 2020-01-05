@@ -35,7 +35,7 @@ public:
 
       parameters[param.key] = param.value;
     }
-
+   
     switch (g)
     {
 
@@ -47,9 +47,8 @@ public:
         for (auto const &param : parameters)
         {
 
-          cout<<"P1: " <<param.first<<"P2: "<<param.second<<" "<<endl;
+          cout << "P1: " << param.first << "P2: " << param.second << " " << endl;
         }
-
 
         // server.publishFeedback(feedback);
         loop_rate.sleep();
@@ -110,7 +109,7 @@ public:
         if (server.isPreemptRequested(goal))
         {
 
-          cout << "DriveForward_FORVER --->Goal Canceled " << endl;
+          cout << "DriveForward_with_timer --->Goal Canceled " << endl;
           result.resultvalue = false;
           server.setAborted(goal, result);
 
@@ -122,7 +121,7 @@ public:
 
     case DriveBackward_With_Timer:
 
-      for (int i = 0; i < 20; i++)
+      for (int i = 0; i < 10; i++)
       {
         cout << " im driving backward WITH_TIMER now" << i << endl;
         // server.publishFeedback(feedback);
@@ -130,7 +129,7 @@ public:
         if (server.isPreemptRequested(goal))
         {
 
-          cout << "DriveForward_FORVER --->Goal Canceled " << endl;
+          cout << "DriveBackward_with_timer --->Goal Canceled " << endl;
           result.resultvalue = returnValue;
           server.setAborted(goal, result);
           return;
@@ -140,10 +139,10 @@ public:
       break;
 
     default:
-      cout << "nothing " << endl;
+      cout <<"GOAL: "<<goal_ <<"---- UNKNOWN ACTION ----" << endl;
       break;
     }
-    cout << "im hereeee" << std::endl;
+    
     if (ros::ok())
     {
       std::cout << " GOAL IS DONE!!" << std::endl;
@@ -165,6 +164,8 @@ public:
       return DriveBackward_With_Timer;
     if (inString == "DriveForward_With_Timer")
       return DriveForward_With_Timer;
+
+    return defaultNum;
   }
 
 private:
