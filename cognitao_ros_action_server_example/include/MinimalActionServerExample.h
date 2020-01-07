@@ -65,7 +65,6 @@ public:
           {
             cout << "true " << endl;
           }
-          std::cout << "realtime " << &result << (int)result.resultvalue << endl;
           server.setAborted(goal, result);
           //   if (ros::ok()){
           //     std::cout<<" GOAL IS DONE!!"<<std::endl;
@@ -108,7 +107,7 @@ public:
         loop_rate.sleep();
         if (server.isPreemptRequested(goal))
         {
-
+          
           cout << "DriveForward_with_timer --->Goal Canceled " << endl;
           result.resultvalue = false;
           server.setAborted(goal, result);
