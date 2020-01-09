@@ -3,14 +3,14 @@
 	   <sequencer name="Navigator"> 
 	   		 <selector name="Drive To Goal"> 
 	               <parallel name="Follow Path"> 
-	                     <task name="Preserve speed" param_tm="3.0" param_x="$current_goal_x" param_z="3.0" description="$CurrentVelocity: 2.3 m/s"/>
-	                     <task name="Preserve heading" description="$Heading: 130 deg"/>
+	                    <task name="Generate Random" description="generate a random 1-10" runner="ros1" action="generateRandom" param_random="$random"/>
+	                     <task name="Generate Random2" description="generate a random 1-10" runner="ros1" action="generateRandom2" param_random="$random"/>
 	               </parallel>
-	               <task name="Recovery" description="Not a critical test" runner="local" action="wait" param_time="3.0"/>
+	               <task name="Recovery" description="Not a critical test" runner="ros1" action="wait" param_time="3.0"/>
 	         </selector>
-	         <task name="Generate Random" description="generate a random 1-10" runner="local" action="generateRandom" param_random="$random"/>
+	         <task name="Generate Random" description="generate a random 1-10" runner="ros1" action="generateRandom" param_random="$random"/>
 	         <wait name="wait" value="3"/>
-	         <task name="Wait random" description="wait for $random seconds" runner="local" action="waitRandom" param_random="$random"/>
+	         <task name="Wait random" description="wait for $random seconds" runner="ros1" action="waitRandom" param_random="$random"/>
 	         <!-- <task name="Loop 10 times" description="loop 10" runner="local" action="loop10" param_loop="$loop"/> -->
 	         <set name="Setting Goal Distance" variable="Distance" value="1"/>
 	         <condition name="Goal reached?" variable="Distance" operation="<" value="2"/>

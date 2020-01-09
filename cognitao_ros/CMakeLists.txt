@@ -29,6 +29,11 @@ add_message_files(
   GoalMsg.msg
 
 )
+add_service_files(
+  FILES
+  getvar.srv
+  setvar.srv
+)
 
 
 

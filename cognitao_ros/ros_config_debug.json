@@ -3,7 +3,7 @@
   "mode" : "LOAD_AND_PLAY",
   "LOAD_AND_PLAY": {
   	"options" : ["plan","log_path","log_topics", "replay"],
-  	"plan": "/home/lin/dm_ros/src/cognitao_ros/cognitao_ros/machines/ros_bt_debug _rosrunner.xml", 
+  	"plan": "/home/lin/dm_ros/src/cognitao_ros/cognitao_ros/machines/ros_bt_debug.xml", 
 	"log_path" :"wm.log",
 	"uilink_basepath" : "./src/cognitao_ros/cognitao.git/www",
 	"replay": "replay.log", 

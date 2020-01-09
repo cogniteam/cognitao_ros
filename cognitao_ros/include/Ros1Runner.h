@@ -58,19 +58,21 @@ public:
         {
             bool goalDone = client_.waitForResult(ros::Duration(1));
 
-            if (stopRequested == true)// task end or aomeone stop the task
+            if (stopRequested == true) // task end or aomeone stop the task
             {
-                cout << "finished ----> send cancelllll " << endl;
-                client_.cancelGoal();
-                ROS_INFO("goal is being canceled");
 
+                if (!existRes)
+                {
+                    client_.cancelGoal();
+                    ROS_INFO("goal is being canceled");
+                    cout << "goal is being canceled " << endl;
+                }
+                else
+                {
+                    cout << "goal DONE!!" << endl;
+                }
                 break;
             }
-
-            // if (goalDone){
-            //     cout<<"finished ----> server SUCCESS "<<endl;
-            //     break;
-            // }
 
             loop_rate.sleep();
         }
@@ -80,7 +82,8 @@ public:
         }
         cognitao_ros::ActionMsgResultConstPtr result = client_.getResult();
 
-        if (result->resultvalue == false) {
+        if (result->resultvalue == false)
+        {
             cout << "false " << endl;
             return false;
         }
@@ -107,7 +110,7 @@ private:
     {
         std::cout << "the result is :" << (int)result->resultvalue << std::endl;
         existRes = true;
-        stopRequested=true; // task completed- stop request to end run() function and return the result
+        stopRequested = true; // task completed- stop request to end run() function and return the result
     }
     actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> client_;
     // std::thread stopReqThread_;

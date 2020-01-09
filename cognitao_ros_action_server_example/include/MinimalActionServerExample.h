@@ -1,14 +1,17 @@
 #include <MinimalActionServer.h>
-
+#include "../../../../devel/include/cognitao_ros/EventMsg.h"
+#include "../../../../devel/include/cognitao_ros/getvar.h"
+#include "../../../../devel/include/cognitao_ros/setvar.h"
+// #include "ros/ros.h"
 #include <thread>
 
 using namespace std;
 enum action_code
 {
-  DriveForward_FORVER,
-  DriveBackward_FORVER,
-  DriveBackward_With_Timer,
-  DriveForward_With_Timer,
+  waitRandom,
+  wait,
+  generateRandom,
+  loop10,
   defaultNum
 };
 
@@ -19,6 +22,9 @@ public:
   explicit MinimalActionServerExample()
       : MinimalActionServer()
   {
+    ros::NodeHandle n_;
+    srv_client_get = n_.serviceClient<cognitao_ros::getvar>("server_get_var");
+    srv_client_set = n_.serviceClient<cognitao_ros::setvar>("server_set_var");
   }
 
   virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) override
@@ -30,118 +36,91 @@ public:
     action_code g = hashit(goal_);
     cognitao_ros::ActionMsgResult result;
     cognitao_ros::ActionMsgFeedback feedback;
+    cognitao_ros::getvar srv;
+    cognitao_ros::setvar srvSet;
+    result.resultvalue = false;
     for (auto const &param : goal.getGoal()->goal.parameters)
     {
 
       parameters[param.key] = param.value;
     }
-   
+
     switch (g)
     {
 
-    case DriveForward_FORVER:
-      for (;;)
+    case waitRandom:
+      cout << "enter to wait random" << endl;
+      srv.request.key = "random";
+      if (srv_client_get.call(srv))
       {
-        cout << " im driving foraward now" << endl;
-        cout << "got params: " << endl;
-        for (auto const &param : parameters)
-        {
-
-          cout << "P1: " << param.first << "P2: " << param.second << " " << endl;
-        }
-
-        // server.publishFeedback(feedback);
-        loop_rate.sleep();
-        if (server.isPreemptRequested(goal))
-        {
-
-          cout << "DriveForward_FORVER --->Goal Canceled " << endl;
-          result.resultvalue = false;
-          if (result.resultvalue == false)
-          {
-            cout << "false " << endl;
-          }
-          else if (result.resultvalue == true)
-          {
-            cout << "true " << endl;
-          }
-          server.setAborted(goal, result);
-          //   if (ros::ok()){
-          //     std::cout<<" GOAL IS DONE!!"<<std::endl;
-          //     result.resultvalue = returnValue;
-          //     cout<<"result value in Server: "<<int(result.resultvalue)<<endl;
-
-          //     server.setSucceeded(goal,result);
-          //   }
-          return;
-        }
+        std::this_thread::sleep_for(std::chrono::seconds(stoi(srv.response.value)));
+        cout << "sleep random for " << srv.response.value << " seconds!!";
       }
+      else
+      {
+        ROS_ERROR("ERROR");
+      }
+      // std::string rnd = WM::getVar("random");
       break;
 
-    case DriveBackward_FORVER:
-
-      for (;;)
-      {
-        cout << " im driving backward now" << endl;
-        // server.publishFeedback(feedback);
-        loop_rate.sleep();
-
-        if (server.isPreemptRequested(goal))
-        {
-
-          result.resultvalue = false;
-          server.setAborted(goal, result, "1");
-
-          std::cout << "PREEMPT IS::::: " << server.isPreemptRequested(goal);
-
-          return;
-        }
-      }
-      break;
-    case DriveForward_With_Timer:
-
-      for (int i = 0; i < 20; i++)
-      {
-        cout << " im driving forward WITH_TIMER now" << i << endl;
-        // server.publishFeedback(feedback);
-        loop_rate.sleep();
-        if (server.isPreemptRequested(goal))
-        {
-          
-          cout << "DriveForward_with_timer --->Goal Canceled " << endl;
-          result.resultvalue = false;
-          server.setAborted(goal, result);
-
-          return;
-        }
-      }
-      // set return value for BehaviourRosProxy
+    case wait:
+      cout << "server wait for a seconddddd" << endl;
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       break;
 
-    case DriveBackward_With_Timer:
+    case generateRandom:
+    {
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
+      srand(seed);
+      int rnd = (rand() % 9) + 1;
+      std::stringstream ss;
+      ss <<rnd;
+      srvSet.request.key = "random";
+      srvSet.request.value = ss.str();
+      if (srv_client_set.call(srvSet))
+      {
+
+        cout << "generate random to " << srvSet.request.value << " seconds!!";
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        // for(;;){
+        //   cout<<"lin"<<endl;
+        // }
+      }
+      else
+      {
+        ROS_ERROR("Failed to call service add_two_ints");
+      }
+    }
+    break;
+
+    case loop10:
+    {
+      std::stringstream ss;
       for (int i = 0; i < 10; i++)
       {
-        cout << " im driving backward WITH_TIMER now" << i << endl;
-        // server.publishFeedback(feedback);
-        loop_rate.sleep();
-        if (server.isPreemptRequested(goal))
+        ss << i;
+        srvSet.request.key = "random";
+        srvSet.request.value = ss.str();
+        if (srv_client_set.call(srvSet))
         {
 
-          cout << "DriveBackward_with_timer --->Goal Canceled " << endl;
-          result.resultvalue = returnValue;
-          server.setAborted(goal, result);
-          return;
+          cout << "loop10 to " << srvSet.request.value << " seconds!!";
+          std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+        else
+        {
+          ROS_ERROR("Failed to call service add_two_ints");
         }
       }
-      // set return value for BehaviourRosProxy
-      break;
+    }
+    break;
 
     default:
-      cout <<"GOAL: "<<goal_ <<"---- UNKNOWN ACTION ----" << endl;
+      cout << "GOAL: " << goal_ << "---- UNKNOWN ACTION ----" << endl;
       break;
     }
-    
+
     if (ros::ok())
     {
       std::cout << " GOAL IS DONE!!" << std::endl;
@@ -151,18 +130,20 @@ public:
 
       server.setSucceeded(goal, result);
     }
+
+    cout<<"ANSWER "<<(int)result.resultvalue<<endl;
   }
 
   action_code hashit(std::string const &inString)
   {
-    if (inString == "DriveForward_FORVER")
-      return DriveForward_FORVER;
-    if (inString == "DriveBackward_FORVER")
-      return DriveBackward_FORVER;
-    if (inString == "DriveBackward_With_Timer")
-      return DriveBackward_With_Timer;
-    if (inString == "DriveForward_With_Timer")
-      return DriveForward_With_Timer;
+    if (inString == "waitRandom")
+      return waitRandom;
+    if (inString == "wait")
+      return wait;
+    if (inString == "generateRandom")
+      return generateRandom;
+    if (inString == "loop10")
+      return loop10;
 
     return defaultNum;
   }
@@ -170,4 +151,7 @@ public:
 private:
   std::thread stopReqThread_;
   std::map<std::string, std::string> parameters;
+
+  ros::ServiceClient srv_client_get;
+  ros::ServiceClient srv_client_set;
 };
