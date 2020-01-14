@@ -11,6 +11,7 @@ enum action_code
   waitRandom,
   wait,
   generateRandom,
+  generateRandom2,
   loop10,
   defaultNum
 };
@@ -26,6 +27,31 @@ public:
     srv_client_get = n_.serviceClient<cognitao_ros::getvar>("server_get_var");
     srv_client_set = n_.serviceClient<cognitao_ros::setvar>("server_set_var");
   }
+  void loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
+  {
+    while (!server.isPreemptRequested(goal))
+    {
+      cout << "no preemption" << endl;
+    }
+
+    cognitao_ros::ActionMsgResult result;
+    result.resultvalue = false;
+    server.setPreempted(goal, result, "lin request");
+    // stopReq = 1;
+  }
+  virtual std::map<std::string, std::string> getParam(const string &name) const
+  {
+    return parameters;
+  }
+  virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
+  {
+    // stopReq=0;
+    execute(goal);
+  }
+  virtual void onStop() //check
+  {
+    // stopReq = 1;
+  }
 
   virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) override
   {
@@ -38,6 +64,7 @@ public:
     cognitao_ros::ActionMsgFeedback feedback;
     cognitao_ros::getvar srv;
     cognitao_ros::setvar srvSet;
+    bool cancelReq = false;
     result.resultvalue = false;
     for (auto const &param : goal.getGoal()->goal.parameters)
     {
@@ -53,8 +80,15 @@ public:
       srv.request.key = "random";
       if (srv_client_get.call(srv))
       {
-        std::this_thread::sleep_for(std::chrono::seconds(stoi(srv.response.value)));
-        cout << "sleep random for " << srv.response.value << " seconds!!";
+        if (!server.isPreemptRequested(goal))
+        {
+          std::this_thread::sleep_for(std::chrono::seconds(stoi(srv.response.value)));
+          cout << "sleep random for " << srv.response.value << " seconds!!";
+        }
+        else
+        {
+          cout << "STOP TASK_ CANCELATION" << endl;
+        }
       }
       else
       {
@@ -64,41 +98,96 @@ public:
       break;
 
     case wait:
-      cout << "server wait for a seconddddd" << endl;
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      // if (!stopReq)
+      {
+        cout << "server wait for a seconddddd" << endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      }
       break;
 
     case generateRandom:
     {
+      // stopReqThread_ = std::thread(&MinimalActionServerExample::loopStopReq, this, goal);
+      // stopReqThread_.detach();
       unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
       srand(seed);
       int rnd = (rand() % 9) + 1;
       std::stringstream ss;
-      ss <<rnd;
+      ss << rnd;
+      srvSet.request.key = "random";
+      srvSet.request.value = ss.str();
+      if (srv_client_set.call(srvSet))
+      {
+          if (!server.isPreemptRequested(goal))
+          {
+          
+            // cout << "generate random to " << srvSet.request.value << " seconds!!";
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+          }
+
+          else
+          {
+            cout << "STOP TASK_ CANCELATION" << endl;
+            cancelReq = true;
+            break;
+          }
+     
+      }
+      else
+      {
+        // server.setPreempted(goal,result,"lin request");
+        ROS_ERROR("Failed to call service add_two_ints");
+      }
+    }
+
+    break;
+    case generateRandom2:
+    {
+      // stopReqThread_ = std::thread(&MinimalActionServerExample::loopStopReq, this, goal);
+      // stopReqThread_.detach();
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+      srand(seed);
+      int rnd = (rand() % 9) + 1;
+      std::stringstream ss;
+      ss << rnd;
       srvSet.request.key = "random";
       srvSet.request.value = ss.str();
       if (srv_client_set.call(srvSet))
       {
 
-        cout << "generate random to " << srvSet.request.value << " seconds!!";
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        // for(;;){
-        //   cout<<"lin"<<endl;
-        // }
+        for (int i = 0; i < 10; i++)
+        {
+          if (!server.isPreemptRequested(goal))
+          {
+            cout << "check task action" << endl;
+            // cout << "generate random to " << srvSet.request.value << " seconds!!";
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+          }
+
+          else
+          {
+            cout << "STOP TASK_ CANCELATION" << endl;
+            cancelReq = true;
+            break;
+          }
+        }
       }
       else
       {
+        // server.setPreempted(goal,result,"lin request");
         ROS_ERROR("Failed to call service add_two_ints");
       }
     }
     break;
-
     case loop10:
     {
       std::stringstream ss;
       for (int i = 0; i < 10; i++)
       {
+        // if (!stopReq)
+
         ss << i;
         srvSet.request.key = "random";
         srvSet.request.value = ss.str();
@@ -108,6 +197,7 @@ public:
           cout << "loop10 to " << srvSet.request.value << " seconds!!";
           std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
+
         else
         {
           ROS_ERROR("Failed to call service add_two_ints");
@@ -123,15 +213,25 @@ public:
 
     if (ros::ok())
     {
-      std::cout << " GOAL IS DONE!!" << std::endl;
-      result.resultvalue = true;
-      cout << "result value in Server: " << int(result.resultvalue) << endl;
-      // std::cout<<"2.PREEMPT IS ::::: "<<server.isPreemptRequested(goal);
+      if (cancelReq)
+      {
+        server.setPreempted(goal, result, "1");
 
-      server.setSucceeded(goal, result);
+        cout << "DUE TO CANCEL REQ: " << endl;
+        cout << "result value in Server: " << int(result.resultvalue) << endl;
+      }
+      else
+      {
+        std::cout << goal_ << " GOAL IS DONE!!" << std::endl;
+        result.resultvalue = true;
+        cout << "result value in Server: " << int(result.resultvalue) << endl;
+        // std::cout<<"2.PREEMPT IS ::::: "<<server.isPreemptRequested(goal);
+
+        server.setSucceeded(goal, result);
+      }
     }
 
-    cout<<"ANSWER "<<(int)result.resultvalue<<endl;
+    cout << "ANSWER " << (int)result.resultvalue << endl;
   }
 
   action_code hashit(std::string const &inString)
@@ -142,6 +242,8 @@ public:
       return wait;
     if (inString == "generateRandom")
       return generateRandom;
+    if (inString == "generateRandom2")
+      return generateRandom2;
     if (inString == "loop10")
       return loop10;
 
@@ -150,8 +252,7 @@ public:
 
 private:
   std::thread stopReqThread_;
-  std::map<std::string, std::string> parameters;
-
+  int stopReq;
   ros::ServiceClient srv_client_get;
   ros::ServiceClient srv_client_set;
 };

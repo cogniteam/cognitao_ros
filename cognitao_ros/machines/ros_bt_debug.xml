@@ -6,7 +6,7 @@
 	                    <task name="Generate Random" description="generate a random 1-10" runner="ros1" action="generateRandom" param_random="$random"/>
 	                     <task name="Generate Random2" description="generate a random 1-10" runner="ros1" action="generateRandom2" param_random="$random"/>
 	               </parallel>
-	               <task name="Recovery" description="Not a critical test" runner="ros1" action="wait" param_time="3.0"/>
+	             
 	         </selector>
 	         <task name="Generate Random" description="generate a random 1-10" runner="ros1" action="generateRandom" param_random="$random"/>
 	         <wait name="wait" value="3"/>

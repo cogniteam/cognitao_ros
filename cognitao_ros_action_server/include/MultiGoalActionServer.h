@@ -2,6 +2,7 @@
 #define MULTI_GOAL_ACTION_SERVER_H_
 
 #include <ros/ros.h>
+
 #include <actionlib/server/action_server.h>
 #include <actionlib/action_definition.h>
 #include <thread>
@@ -101,7 +102,7 @@ public:
         typename GoalQueue::iterator g = active_goals.find(goal);
         if (g != active_goals.end())
         {
-            cout << "preempt is -> " << g->isPreemptReq << endl;
+            // cout << "preempt is -> " << g->isPreemptReq << endl;
             return g->isPreemptReq;
         }
         return true;

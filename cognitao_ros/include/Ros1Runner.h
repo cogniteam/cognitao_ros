@@ -17,21 +17,14 @@ public:
     {
         action_ = action;
         paramMap = parameters;
+        stopRequested=false;
     }
 
-    // void loopStopReq()
-    // {
 
-    //     ros::Rate loop_rate(2);
-    //     for (int i = 0; i < 10; i++)
-    //     {
-    //         loop_rate.sleep();
-    //     }
-
-    //     stopRequested = true;
-    // }
     virtual bool run()
     {
+        stopRequested=false;
+        cout<<" DO ACTION _____ "<<action_<<stopRequested<<endl;
         client_.waitForServer();
 
         actionGoal goalMsg;
@@ -58,9 +51,9 @@ public:
         {
             bool goalDone = client_.waitForResult(ros::Duration(1));
 
-            if (stopRequested == true) // task end or aomeone stop the task
+            if (stopRequested == true) // task end or someone stop the task
             {
-
+                cout<<"linlinlinlinl"<<endl;
                 if (!existRes)
                 {
                     client_.cancelGoal();
@@ -113,8 +106,8 @@ private:
         stopRequested = true; // task completed- stop request to end run() function and return the result
     }
     actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> client_;
-    // std::thread stopReqThread_;
     bool existRes = false;
+
     atomic<bool> stopRequested;
     std::map<std::string, std::string> paramMap;
 };
