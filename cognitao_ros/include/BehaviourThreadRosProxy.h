@@ -4,7 +4,7 @@
 #include <cognitao_ros/ActionMsgAction.h> // Note: "Action" is appended
 #include <actionlib/client/simple_action_client.h>
 
-#include <CogniTAO.h>
+#include <CogniTao.h>
 
 using namespace std;
 using actionType = cognitao_ros::ActionMsgAction;

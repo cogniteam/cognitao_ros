@@ -1,7 +1,7 @@
 #include <cognitao_ros/ActionMsgAction.h> // Note: "Action" is appended
 #include <actionlib/client/simple_action_client.h>
 
-#include <CogniTAO.h>
+#include <CogniTao.h>
 
 using namespace std;
 using actionType = cognitao_ros::ActionMsgAction;
@@ -13,23 +13,29 @@ typedef actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> CL;
 class Ros1Runner : public Runner
 {
 public:
-    Ros1Runner(string action, std::map<std::string, std::string> parameters) : Runner(action, parameters), client_("cognitao_ros", true)
+    Ros1Runner(): client_("cognitao_ros", true)
     {
-        action_ = action;
-        paramMap = parameters;
-        stopRequested=false;
-    }
 
+        int n=0;
+        // ros::NodeHandle n_;
+        stopRequested = false;
+    }
+    // Ros1Runner(string action, std::map<std::string, std::string> parameters) : Runner(action, parameters), client_("cognitao_ros", true)
+    // {
+    //     action_ = action;
+    //     paramMap = parameters;
+    //     stopRequested=false;
+    // }
 
     virtual bool run()
     {
-        stopRequested=false;
-        cout<<" DO ACTION _____ "<<action_<<stopRequested<<endl;
+        stopRequested = false;
+        cout << " DO ACTION _____ " << action_ << stopRequested << endl;
         client_.waitForServer();
 
         actionGoal goalMsg;
         goalMsg.goal.actiontype = action_;
-        for (auto const &x : paramMap)
+        for (auto const &x : parameters_)
         {
             cognitao_ros::KeyValue param;
             param.key = x.first;
@@ -53,7 +59,7 @@ public:
 
             if (stopRequested == true) // task end or someone stop the task
             {
-                cout<<"linlinlinlinl"<<endl;
+                cout << "linlinlinlinl" << endl;
                 if (!existRes)
                 {
                     client_.cancelGoal();
@@ -109,5 +115,5 @@ private:
     bool existRes = false;
 
     atomic<bool> stopRequested;
-    std::map<std::string, std::string> paramMap;
+    // std::map<std::string, std::string> paramMap;
 };

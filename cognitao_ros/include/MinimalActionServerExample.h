@@ -70,6 +70,9 @@ public:
     {
 
       parameters[param.key] = param.value;
+      cout<<"loop"<<endl;
+      cout<<"key"<<param.key<<endl;
+      cout<<"val"<<param.value<<endl;
     }
 
     switch (g)
@@ -100,8 +103,18 @@ public:
     case wait:
       // if (!stopReq)
       {
-        cout << "server wait for a seconddddd" << endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        // cout << "server wait for a seconddddd" << endl;
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        cout<<"--------------CASE WAIT---------------"<<endl;
+        cout<<"time=======>"<<parameters["time"].c_str()<<endl;
+        int t=atoi(parameters["time"].c_str());
+        cout<<"t is "<<t<<endl;
+        cout<<"WAITING TASK"<<endl;
+        for (int i=0 ; i<t;i++){
+          cout<<" executing wait "<< i<<endl;
+          std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
       }
       break;
 
@@ -119,20 +132,19 @@ public:
       srvSet.request.value = ss.str();
       if (srv_client_set.call(srvSet))
       {
-          if (!server.isPreemptRequested(goal))
-          {
-          
-            // cout << "generate random to " << srvSet.request.value << " seconds!!";
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-          }
+        if (!server.isPreemptRequested(goal))
+        {
 
-          else
-          {
-            cout << "STOP TASK_ CANCELATION" << endl;
-            cancelReq = true;
-            break;
-          }
-     
+          // cout << "generate random to " << srvSet.request.value << " seconds!!";
+          std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+
+        else
+        {
+          cout << "STOP TASK_ CANCELATION" << endl;
+          cancelReq = true;
+          break;
+        }
       }
       else
       {

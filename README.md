@@ -43,7 +43,7 @@ After the script is ran the project will be placed in [yourWorkspace/src/cognita
 
 To use the CogniTAO library in your workspace add to your project file:
 ```
-#include <CogniTAO.h>
+#include <CogniTao.h>
 ```
 
 **CMake**
