@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <CogniTao.h>
-#include "../include/Ros1Runner.h"
+#include "../include/cognitao_ros/client/Ros1Runner.h"
+
 #include <atomic>
 // #include "ros/ros.h"
 // #include "../include/RosDataSource.h"
