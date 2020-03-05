@@ -10,6 +10,7 @@ using actionType = cognitao_ros::ActionMsgAction;
 using actionGoal = cognitao_ros::ActionMsgGoal;
 
 typedef actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> CL;
+
 class Ros1Runner : public Runner
 {
 public:

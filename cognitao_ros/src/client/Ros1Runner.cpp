@@ -1,5 +1,10 @@
 #include <cognitao_ros/client/Ros1Runner.h>
 
+void h_sig_sigint(int signum)
+{
+    std::cout << "Receive signum: " << signum << std::endl;
+    ros::shutdown();
+}
 Ros1Runner::Ros1Runner() : client_("cognitao_ros", true)
 {
     stopRequested = false;
@@ -12,8 +17,11 @@ Ros1Runner::Ros1Runner(const string &action, std::map<std::string, std::string> 
 }
 bool Ros1Runner::run()
 {
+    cout<<"lin azan"<<endl;
     stopRequested = false;
     success = false;
+
+    signal(SIGINT, h_sig_sigint);
     cout << " DO ACTION _____ " << action_ << endl;
     client_.waitForServer();
 

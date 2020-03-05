@@ -45,18 +45,30 @@ add_executable(cognitao_ros_node
 	  src/client/Ros1RunnerPlugin.cpp
     src/client/Ros1Runner.cpp		
 )  
-add_library(cognitao_ros_shared SHARED
- src/client/Ros1RunnerPlugin.cpp
- src/client/Ros1Runner.cpp
-)
-generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
-catkin_package()
-
 add_dependencies(cognitao_ros_node
-cognitao_ros_shared
 ${${PROJECT_NAME}_EXPORTED_TARGETS}
 ${catkin_EXPORTED_TARGETS}
 )
+
+# shared
+add_library(cognitao_ros_shared SHARED
+ src/client/Ros1RunnerPlugin.cpp
+ src/client/Ros1Runner.cpp 
+)
+
+
+add_dependencies(cognitao_ros_shared
+${${PROJECT_NAME}_EXPORTED_TARGETS}
+${catkin_EXPORTED_TARGETS}
+)
+
+	  
+target_link_libraries(cognitao_ros_shared
+${catkin_LIBRARIES}	
+)
+
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
+catkin_package()
 	 
 	  
 target_link_libraries(cognitao_ros_node
