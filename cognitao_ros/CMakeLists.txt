@@ -42,9 +42,13 @@ add_action_files(DIRECTORY action FILES ActionMsg.action)
 
 
 add_executable(cognitao_ros_node
-	  src/client/Ros1RunnerPlugin.cpp		
+	  src/client/Ros1RunnerPlugin.cpp
+    src/client/Ros1Runner.cpp		
 )  
-add_library(cognitao_ros_shared SHARED src/client/Ros1RunnerPlugin.cpp)
+add_library(cognitao_ros_shared SHARED
+ src/client/Ros1RunnerPlugin.cpp
+ src/client/Ros1Runner.cpp
+)
 generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
 catkin_package()
 
@@ -60,7 +64,10 @@ ${catkin_LIBRARIES}
 	
 )
 
-add_executable(action_server_not_composable src/server/action_server_main.cpp)
+add_executable(action_server_not_composable
+ src/server/action_server_main.cpp
+ src/server/MinimalActionServer.cpp
+ )
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cognitao_ros_action_server
@@ -79,7 +86,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(action_server src/server_example/minimal_server_example_main.cpp)
+add_executable(action_server 
+src/server_example/minimal_server_example_main.cpp
+src/server/MinimalActionServer.cpp
+src/server_example/MinimalActionServerExample.cpp
+)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cognitao_ros_action_server

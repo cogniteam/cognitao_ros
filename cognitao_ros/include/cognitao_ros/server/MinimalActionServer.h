@@ -16,26 +16,13 @@ protected:
   std::map<std::string, std::string> parameters;
 
 public:
-  MinimalActionServer() : server(nh_, "cognitao_ros",
-                                 boost::bind(&MinimalActionServer::execute, this, _1), false)
-  {
+  MinimalActionServer();
 
-    std::cout << "server is running.." << std::endl;
-    server.start(); //start the server running
-  }
-
-  ~MinimalActionServer(void) {}
+  ~MinimalActionServer(void);
   virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) = 0;
   virtual void onStop() = 0;
   virtual std::map<std::string, std::string> getParam(const string &name) const = 0;
 
-  virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
-  {
-    for (int i = 0; i < 20; i++)
-    {
-      //std::cout<<"doing mission.."<<std::endl;
-    }
-    server.setSucceeded(goal);
-    cout << "finished " << endl;
-  }
+  virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal);
+ 
 };
