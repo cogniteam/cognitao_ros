@@ -1,7 +1,7 @@
 #include <cognitao_ros/server/MinimalActionServer.h>
-#include "../../../../devel/include/cognitao_ros/EventMsg.h"
-#include "../../../../devel/include/cognitao_ros/getvar.h"
-#include "../../../../devel/include/cognitao_ros/setvar.h"
+#include "../../../devel/include/cognitao_ros/EventMsg.h"
+#include "../../../devel/include/cognitao_ros/getvar.h"
+#include "../../../devel/include/cognitao_ros/setvar.h"
 // #include "ros/ros.h"
 #include <thread>
 
