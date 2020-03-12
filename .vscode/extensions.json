@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "cschlosser.doxdocgen",
+        "ms-vscode.cpptools",
+        "ritwickdey.liveserver",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake"
+    ]
+}

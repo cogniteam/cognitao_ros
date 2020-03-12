@@ -5,35 +5,17 @@
 #include "../include/cognitao_ros/client/Ros1Runner.h"
 
 #include <atomic>
-// #include "ros/ros.h"
-// #include "../include/RosDataSource.h"
-// #include <actionlib/client/simple_action_client.h>
-// #include <cognitao_ros/ActionMsgAction.h>
-// #include "../include/Ros1Runner.h"
-// #include "../include/Ros1RunnerFactoryMethod.h"
 
-// static std::atomic<int> counter(0);
-extern "C" Runner *create_runner()
-{
-	if (!ros::isInitialized())
-	{
-		cout<<"NOT INITIALIZE!!!!!"<<endl;
-		int n = 0;
-		ros::init(n, nullptr, "cognitao_ros1",ros::init_options::NoSigintHandler);
-	}
-	// counter++;
+extern "C" Runner *create_runner() {
 	return new Ros1Runner();
 }
 
-extern "C" void destroy_runner(Runner *object)
-{
-	// counter--;
+extern "C" void destroy_runner(Runner *object) {
 	delete object;
 }
 
-extern "C" const char *get_runner_type()
-{
-	return "ros1_runner";
+extern "C" const char *get_runner_type() {
+	return "ros";
 }
 
 int main(int argc, char **argv)

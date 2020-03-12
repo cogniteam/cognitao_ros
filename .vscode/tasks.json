@@ -1,0 +1,108 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make all [release]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j1",
+            "problemMatcher": [ "$gcc" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make install [release]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j1 && make install",
+            "problemMatcher": [ "$gcc" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make install [debug]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j1 && make install",
+            "problemMatcher": [ "$gcc" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "make all [debug]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j1",
+            "problemMatcher": [ "$gcc" ],
+            "group": "build"
+        },
+        {
+            "label": "make all test [debug]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make install -j1 && cd .. && mkdir test/build -p && cd test/build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make clean && make -j1",
+            "problemMatcher": [ "$gcc" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm build/ -rf",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "cpack [deb]",
+            "type": "shell",
+            "command": "cd build/ && cpack",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "cognitao_server bt.xml",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/cognitao_server",
+            "args": [ 
+                "${workspaceFolder}/assets/machines/bt.xml" 
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "cognitao_server bt_fast.xml",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/cognitao_server",
+            "args": [ 
+                "${workspaceFolder}/assets/machines/bt_fast.xml" 
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "cognitao_server bt_trigger.xml",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/cognitao_server",
+            "args": [ 
+                "${workspaceFolder}/assets/machines/bt_trigger.xml" 
+            ],
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "cognitao_server fsm.xml",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/cognitao_server",
+            "args": [ 
+                "${workspaceFolder}/assets/machines/fsm.xml" 
+            ],
+            "group": "test",
+            "problemMatcher": []
+        }
+    ]
+}
