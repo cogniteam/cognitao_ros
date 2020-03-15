@@ -16,7 +16,7 @@ enum action_code
   defaultNum
 };
 
-class MinimalActionServerExample : public MinimalActionServer
+class MinimalActionServerExample : public RosActionServer
 {
 
 public:

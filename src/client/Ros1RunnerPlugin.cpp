@@ -1,86 +1,46 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <CogniTao.h>
-#include "../include/cognitao_ros/client/Ros1Runner.h"
+/**
+ * @brief 
+ * 
+ * @file Ros1RunnerPlugin.cpp
+ * 
+ * @author Igor Makhtes (igor@cogniteam.com)
+ * @date 2020-03-15
+ * @copyright Cogniteam (c) 2020
+ *    
+ * MIT License
+ *   
+ * Permission is hereby granted, free of charge, to any person obtaining a  copy
+ * of this software and associated documentation files (the 'Software'), to deal
+ * in the Software without restriction, including without  limitation the rights
+ * to use, copy, modify, merge,  publish,  distribute,  sublicense,  and/or sell
+ * copies of the Software, and  to  permit  persons  to  whom  the  Software  is 
+ * furnished to do so, subject to the following conditions:
+ *   
+ * The   above   copyright   notice   and  this   permission   notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *   
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED  TO  THE  WARRANTIES  OF  MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN  NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE  LIABLE  FOR  ANY  CLAIM,  DAMAGES  OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ */
 
-#include <atomic>
-// #include "ros/ros.h"
-// #include "../include/RosDataSource.h"
-// #include <actionlib/client/simple_action_client.h>
-// #include <cognitao_ros/ActionMsgAction.h>
-// #include "../include/Ros1Runner.h"
-// #include "../include/Ros1RunnerFactoryMethod.h"
 
-// static std::atomic<int> counter(0);
-extern "C" Runner *create_runner()
-{
-	if (!ros::isInitialized())
-	{
-		cout<<"NOT INITIALIZE!!!!!"<<endl;
-		int n = 0;
-		ros::init(n, nullptr, "cognitao_ros1",ros::init_options::NoSigintHandler);
-	}
-	// counter++;
-	return new Ros1Runner();
+#include <cognitao_ros/client/Ros1Runner.h>
+
+
+extern "C" Runner *create_runner() {
+	return new cognitao_ros::runner::Ros1Runner();
 }
 
-extern "C" void destroy_runner(Runner *object)
-{
-	// counter--;
+extern "C" void destroy_runner(Runner *object) {
 	delete object;
 }
 
-extern "C" const char *get_runner_type()
-{
-	return "ros1_runner";
-}
-
-int main(int argc, char **argv)
-{
-
-	std::cout << "node running" << std::endl;
-
-	// map<string, string> map_;
-	// map_["time"] = "60.0";
-	// Runner *r1 = create_runner();
-	// Runner *r2 = create_runner();
-	// r1->setAction("wait");
-	// r1->setParameters(map_);
-	// r1->run();
-	// r2->setAction("wait");
-	// r2->setParameters(map_);
-	// r2->run();
-
-
-	// WM::init(new RosDataSource(argc, argv));
-
-	// RunnerFactory::registerFactoryMethod("ros1", new Ros1RunnerFactoryMethod());
-
-	 //Config config("src/cognitao_ros/cognitao_ros/ros_config_debug.json");
-
-	// //update WM variables from config
-	// for (auto elem : config.getWmElements())
-	// {
-	// 	WM::setVar(elem.first, elem.second);
-	// }
-
-	// // read machine from XML
-	// Machine *m = MachineXMLReader::read(config.getMachineXmlPath());
-
-	// //create WebServer instance with a machine
-	// MachineWebServer w(
-	// 	config.getWebServerBasePath(),
-	// 	config.getWebServerIp(),
-	// 	config.getWebServerPort(), m);
-
-	// m->start();
-
-	// while (true) //!m->getCurrentState()->hasReturn())
-	// {
-	// 	std::this_thread::sleep_for(std::chrono::seconds(1));
-	// }
-
-	// exit(0);
-	return 0;
+extern "C" const char *get_runner_type() {
+	return "ros";
 }

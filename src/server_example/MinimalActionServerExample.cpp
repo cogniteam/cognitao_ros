@@ -1,7 +1,7 @@
 #include <cognitao_ros/server_example/MinimalActionServerExample.h>
 
 MinimalActionServerExample::MinimalActionServerExample()
-    : MinimalActionServer()
+    : RosActionServer()
 {
     ros::NodeHandle n_;
     srv_client_get = n_.serviceClient<cognitao_ros::getvar>("server_get_var");
@@ -32,7 +32,7 @@ void MinimalActionServerExample::onStart(const actionlib::MultiGoalActionServer<
     execute(goal);
 }
 
-void MinimalActionServer::onStop(){//stopReq=1;
+void RosActionServer::onStop(){//stopReq=1;
 }
 void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
 {

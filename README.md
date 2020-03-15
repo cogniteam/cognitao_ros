@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/ros.jpeg"><br><br>
+  <img src="/assets/images/ros.jpeg"><br><br>
 </div>
 
 -----------------

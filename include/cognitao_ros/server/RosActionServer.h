@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class MinimalActionServer
+class RosActionServer
 {
 protected:
   ros::NodeHandle nh_;
@@ -16,9 +16,9 @@ protected:
   std::map<std::string, std::string> parameters;
 
 public:
-  MinimalActionServer();
+  RosActionServer();
 
-  ~MinimalActionServer(void);
+  ~RosActionServer(void);
   virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) = 0;
   virtual void onStop() = 0;
   virtual std::map<std::string, std::string> getParam(const string &name) const = 0;
