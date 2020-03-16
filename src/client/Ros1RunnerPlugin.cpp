@@ -19,7 +19,7 @@ extern "C" Runner *create_runner()
 	{
 		cout<<"NOT INITIALIZE!!!!!"<<endl;
 		int n = 0;
-		ros::init(n, nullptr, "cognitao_ros1",ros::init_options::NoSigintHandler);
+		ros::init(n, nullptr, "cognitao_ros1");
 	}
 	// counter++;
 	return new Ros1Runner();

@@ -1,12 +1,14 @@
 #include <cognitao_ros/client/Ros1Runner.h>
 
-void h_sig_sigint(int signum)
-{
-    std::cout << "Receive signum: " << signum << std::endl;
-    ros::shutdown();
-}
+// void h_sig_sigint(int signum)
+// {
+//     std::cout << "Receive signum: " << signum << std::endl;
+//     Ros1Runner::stop();
+// }
 Ros1Runner::Ros1Runner() : client_("cognitao_ros", true)
 {
+    // ros::NodeHandle n;
+    // ros::Subscriber sub = n.subscribe("stopMe", 1000, stopCallback);
     stopRequested = false;
     success = false;
 }
@@ -15,13 +17,14 @@ Ros1Runner::Ros1Runner(const string &action, std::map<std::string, std::string> 
     stopRequested = false;
     success = false;
 }
+
 bool Ros1Runner::run()
 {
-    cout<<"lin azan"<<endl;
+    
     stopRequested = false;
     success = false;
 
-    signal(SIGINT, h_sig_sigint);
+    // signal(SIGINT, h_sig_sigint);
     cout << " DO ACTION _____ " << action_ << endl;
     client_.waitForServer();
 
