@@ -48,6 +48,7 @@ add_executable(cognitao_ros_node
 	  src/client/Ros1RunnerPlugin.cpp
     src/ros_dataSource/RosDataSourcePlugin.cpp
     src/ros_dataSource/RosDataSource.cpp
+    src/ros_dataSource/src_executables_cognitao_wmm.cpp
     src/client/Ros1Runner.cpp		
 )  
 add_dependencies(cognitao_ros_node

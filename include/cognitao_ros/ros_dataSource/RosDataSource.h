@@ -12,21 +12,22 @@ class RosDataSource : public DataSource
 {
 
 public:
+    static DataSource::Ptr create()
+    {
+        return DataSource::Ptr(new RosDataSource());
+    }
     RosDataSource();
 
     virtual ~RosDataSource();
 
 protected:
     virtual bool publishUpdateEvent(const string &name,
-                                    const string &value) = 0;
-    
+                                    const string &value);
+
     // void onDataSourceEvent();
 
-    void onDataSourceEvent(const cognitao_ros::EventMsg &msg)
-    {
-        // WM::setVar(, msg.value);
-        //  DataSource::variableUpdated(msg.key,msg.value);
-    }
+    void onDataSourceEvent(const cognitao_ros::EventMsg &msg);
+
     void doSpin()
     {
 
