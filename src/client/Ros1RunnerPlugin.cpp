@@ -29,20 +29,26 @@
  * 
  */
 
-
 #include <cognitao_ros/client/Ros1Runner.h>
 
-
-
 extern "C" Runner *create_runner(){
+
+	if (!ros::isInitialized()){
+		
+		cout << "NOT INITIALIZE!!!!!" << endl;
+		int n = 0;
+		ros::init(n, nullptr, "cognitao_ros1");
+	}
 	return new Ros1Runner();
 }
 
-extern "C" void destroy_runner(Runner *object){
+extern "C" void destroy_runner(Runner *object)
+{
 	delete object;
 }
 
-extern "C" const char *get_runner_type(){
-	
+extern "C" const char *get_runner_type()
+{
+
 	return "ros1_runner";
 }
