@@ -1,17 +1,55 @@
+/*
+ * RosActionServerExample.cpp
+ * @author Lin Azan (lin@cogniteam.com)
+ * @date 2020-03-15
+ * @copyright Cogniteam (c) 2020
+ *
+ *
+ * Cogniteam LTD CONFIDENTIAL
+ *
+ * Unpublished Copyright (c) 2010-2020 Cogniteam,        All Rights Reserved.
+ *
+ * NOTICE:  All information contained  herein  is,  and  remains the property
+ * of Cogniteam.   The   intellectual   and   technical   concepts  contained
+ * herein are proprietary to Cogniteam and may  be  covered  by  Israeli  and
+ * Foreign Patents, patents in process,  and  are  protected  by trade secret
+ * or copyright law. Dissemination of  this  information  or  reproduction of
+ * this material is strictly forbidden unless  prior  written  permission  is
+ * obtained  from  Cogniteam.  Access  to  the  source  code contained herein
+ * is hereby   forbidden   to   anyone  except  current  Cogniteam employees,
+ * managers   or   contractors   who   have   executed   Confidentiality  and
+ * Non-disclosure    agreements    explicitly    covering     such     access
+ *
+ * The copyright notice  above  does  not  evidence  any  actual  or intended
+ * publication  or  disclosure    of    this  source  code,   which  includes
+ * information that is confidential  and/or  proprietary,  and  is  a   trade
+ * secret, of   Cogniteam.    ANY REPRODUCTION,  MODIFICATION,  DISTRIBUTION,
+ * PUBLIC   PERFORMANCE,  OR  PUBLIC  DISPLAY  OF  OR  THROUGH USE   OF  THIS
+ * SOURCE  CODE   WITHOUT   THE  EXPRESS  WRITTEN  CONSENT  OF  Cogniteam  IS
+ * STRICTLY PROHIBITED, AND IN VIOLATION OF APPLICABLE LAWS AND INTERNATIONAL
+ * TREATIES.  THE RECEIPT OR POSSESSION OF  THIS SOURCE  CODE  AND/OR RELATED
+ * INFORMATION DOES  NOT CONVEY OR IMPLY ANY RIGHTS  TO  REPRODUCE,  DISCLOSE
+ * OR  DISTRIBUTE ITS CONTENTS, OR TO  MANUFACTURE,  USE,  OR  SELL  ANYTHING
+ * THAT      IT     MAY     DESCRIBE,     IN     WHOLE     OR     IN     PART
+ *
+ */
+
+
 #include <cognitao_ros/server_example/MinimalActionServerExample.h>
 
+
 MinimalActionServerExample::MinimalActionServerExample()
-    : MinimalActionServer()
-{
+    : MinimalActionServer(){
+
     ros::NodeHandle n_;
     srv_client_get = n_.serviceClient<cognitao_ros::getvar>("server_get_var");
     srv_client_set = n_.serviceClient<cognitao_ros::setvar>("server_set_var");
 }
 
-void MinimalActionServerExample::loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
-{
-    while (!server.isPreemptRequested(goal))
-    {
+void MinimalActionServerExample::loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+
+    while (!server.isPreemptRequested(goal)){
+
         cout << "no preemption" << endl;
     }
 
@@ -21,21 +59,23 @@ void MinimalActionServerExample::loopStopReq(const actionlib::MultiGoalActionSer
     // stopReq = 1;
 }
 
-std::map<std::string, std::string> MinimalActionServerExample::getParam(const string &name) const
-{
+std::map<std::string, std::string> MinimalActionServerExample::getParam(const string &name) const{
+
     return parameters;
 }
 
-void MinimalActionServerExample::onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
-{
+void MinimalActionServerExample::onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+
     // stopReq=0;
     execute(goal);
 }
 
-void MinimalActionServer::onStop(){//stopReq=1;
+void MinimalActionServerExample::onStop(){
+    //stopReq=1;
 }
-void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal)
-{
+
+void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+
     cout << " start execute " << goal.getGoal()->goal.actiontype << endl;
     const string goal_ = goal.getGoal()->goal.actiontype;
     bool returnValue = true;
@@ -47,8 +87,7 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
     cognitao_ros::setvar srvSet;
     bool cancelReq = false;
     result.resultvalue = false;
-    for (auto const &param : goal.getGoal()->goal.parameters)
-    {
+    for (auto const &param : goal.getGoal()->goal.parameters){
 
         parameters[param.key] = param.value;
         cout << "loop" << endl;
@@ -175,6 +214,7 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
         }
     }
     break;
+
     case loop10:
     {
         std::stringstream ss;
@@ -185,15 +225,14 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
             ss << i;
             srvSet.request.key = "random";
             srvSet.request.value = ss.str();
-            if (srv_client_set.call(srvSet))
-            {
+            if (srv_client_set.call(srvSet)){
 
                 cout << "loop10 to " << srvSet.request.value << " seconds!!";
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             }
 
-            else
-            {
+            else{
+
                 ROS_ERROR("Failed to call service add_two_ints");
             }
         }
@@ -205,17 +244,17 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
         break;
     }
 
-    if (ros::ok())
-    {
-        if (cancelReq)
-        {
+    if (ros::ok()){
+
+        if (cancelReq){
+
             server.setPreempted(goal, result, "1");
 
             cout << "DUE TO CANCEL REQ: " << endl;
             cout << "result value in Server: " << int(result.resultvalue) << endl;
         }
-        else
-        {
+        else{
+
             std::cout << goal_ << " GOAL IS DONE!!" << std::endl;
             result.resultvalue = true;
             cout << "result value in Server: " << int(result.resultvalue) << endl;
@@ -228,8 +267,8 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
     cout << "ANSWER " << (int)result.resultvalue << endl;
 }
 
-action_code MinimalActionServerExample::hashit(std::string const &inString)
-  {
+action_code MinimalActionServerExample::hashit(std::string const &inString){
+
     if (inString == "waitRandom")
       return waitRandom;
     if (inString == "wait")
