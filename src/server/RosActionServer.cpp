@@ -35,46 +35,27 @@
  */
 
 
-#ifndef COGNITAO_ROS_ROSACTIONSERVER_H_
-#define COGNITAO_ROS_ROSACTIONSERVER_H_
+#include <cognitao_ros/server/RosActionServer.h>
 
 
-#include <string>
-#include <iostream>
-#include <thread>
+RosActionServer::RosActionServer() : server(nh_, "cognitao_ros",
+                                                    boost::bind(&RosActionServer::execute, this, _1), false){
 
-#include <cognitao_ros/ActionMsgAction.h>
-#include "MultiGoalActionServer.h"
+    std::cout << "server is running.." << std::endl;
 
+    server.start(); //start the server running
+}
 
-using namespace std;
+RosActionServer::~RosActionServer(void) {}
 
-class MinimalActionServer {
+void RosActionServer::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
 
-public:
+    for (int i = 0; i < 20; i++){
 
-    MinimalActionServer();
+        //std::cout<<"doing mission.."<<std::endl;
+    }
 
-    ~MinimalActionServer(void);
-
-public:
-
-  virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) = 0;
-
-  virtual void onStop() = 0;
-
-  virtual std::map<std::string, std::string> getParam(const string &name) const = 0;
-
-  virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal);
- 
- protected:
-
-  ros::NodeHandle nh_;
-
-  actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction> server;
-
-  std::map<std::string, std::string> parameters;
-};
-
-
-#endif 
+    server.setSucceeded(goal);
+    
+    cout << "finished " << endl;
+}

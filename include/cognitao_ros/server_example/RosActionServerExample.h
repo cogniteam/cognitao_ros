@@ -35,16 +35,13 @@
  */
 
 
-// #include "ros/ros.h"
+
 #include <thread>
 
-#include <cognitao_ros/server/MinimalActionServer.h>
-#include "../../../devel/include/cognitao_ros/EventMsg.h"
-#include "../../../devel/include/cognitao_ros/getvar.h"
-#include "../../../devel/include/cognitao_ros/setvar.h"
-
-
-using namespace std;
+#include <cognitao_ros/server/RosActionServer.h>
+#include <cognitao_ros/setvar.h>
+#include <cognitao_ros/getvar.h>
+#include <cognitao_ros/EventMsg.h>
 
 
 enum action_code
@@ -61,12 +58,12 @@ enum action_code
 /**
  *implemantation example of RosActionServer
  */
-class MinimalActionServerExample : public MinimalActionServer{
+class RosActionServerExample : public RosActionServer{
 
 public:
 
-  explicit MinimalActionServerExample();
-  ~MinimalActionServerExample(){}
+  explicit RosActionServerExample();
+  ~RosActionServerExample(){}
 
 public:
 

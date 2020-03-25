@@ -37,7 +37,7 @@
 #include <actionlib/client/simple_action_client.h>
 
 #include <cognitao_ros/ActionMsgAction.h> 
-#include <CogniTao.h>
+#include <cognitao/CogniTao.h>
 
 using namespace std;
 using actionType = cognitao_ros::ActionMsgAction;

@@ -29,7 +29,9 @@
  * 
  */
 
-#include "../include/cognitao_ros/ros_dataSource/RosDataSource.h"
+
+#include <cognitao_ros/ros_dataSource/RosDataSource.h>
+
 
 extern "C" DataSource *create_datasource(){
 

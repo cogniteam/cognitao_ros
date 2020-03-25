@@ -43,8 +43,8 @@
 
 #include <cognitao/CogniTao.h>
 #include <cognitao/data_sources/DataSource.h>
-#include "../../../../../devel/include/cognitao_ros/EventMsg.h"
 
+#include <cognitao_ros/EventMsg.h>
 
 using namespace std;
 

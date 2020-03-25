@@ -15,10 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   
 )
 
-find_package(Threads 
-   
-)
-
+find_package(Threads)
 
 include_directories(
 	include
@@ -44,19 +41,18 @@ add_service_files(
 add_action_files(DIRECTORY action FILES ActionMsg.action)
 
 
-add_executable(cognitao_ros_node
-	  src/client/Ros1RunnerPlugin.cpp
-    src/ros_dataSource/RosDataSourcePlugin.cpp
-    src/ros_dataSource/RosDataSource.cpp
-    src/ros_dataSource/src_executables_cognitao_wmm.cpp
-    src/client/Ros1Runner.cpp		
-)  
-add_dependencies(cognitao_ros_node
-${${PROJECT_NAME}_EXPORTED_TARGETS}
-${catkin_EXPORTED_TARGETS}
-)
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
 
-# shared
+catkin_package()
+
+#
+# Build
+#
+
+#
+# shared Runner plugin
+#
+
 add_library(cognitao_ros_shared SHARED
  src/client/Ros1RunnerPlugin.cpp
  src/client/Ros1Runner.cpp 
@@ -73,7 +69,10 @@ target_link_libraries(cognitao_ros_shared
 ${catkin_LIBRARIES}	
 )
 
-## shared data_source
+#
+## shared Data_source
+#
+
 add_library(ros_datasource_shared SHARED
  src/ros_dataSource/RosDataSourcePlugin.cpp
  src/ros_dataSource/RosDataSource.cpp
@@ -90,30 +89,34 @@ target_link_libraries(ros_datasource_shared
 ${catkin_LIBRARIES}	
 )
 
-generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
-catkin_package()
-	 
-	  
-target_link_libraries(cognitao_ros_node
-cognitao_core
-${catkin_LIBRARIES}
-	
-)
+#install(TARGETS
+#   ros_datasource_shared
+#  DESTINATION /usr/lib/cognitao/plugins/
+#)
+
+
+
+#
+# Ros action server
+#
 
 add_executable(action_server_not_composable
  src/server/action_server_main.cpp
- src/server/MinimalActionServer.cpp
+ src/server/RosActionServer.cpp
  )
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cognitao_ros_action_server
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
 )
+
 add_dependencies(action_server_not_composable
 ${${PROJECT_NAME}_EXPORTED_TARGETS}
 ${catkin_EXPORTED_TARGETS}
 )
+
 target_link_libraries(action_server_not_composable
 ${catkin_LIBRARIES})
 
@@ -122,21 +125,29 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+
+#
+# Action server executable example
+#
+
 add_executable(action_server 
-src/server_example/minimal_server_example_main.cpp
-src/server/MinimalActionServer.cpp
-src/server_example/MinimalActionServerExample.cpp
+src/server_example/Ros_Server_Example_Main.cpp
+src/server/RosActionServer.cpp
+src/server_example/RosActionServerExample.cpp
 )
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cognitao_ros_action_server
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
 )
+
 add_dependencies(action_server
 ${${PROJECT_NAME}_EXPORTED_TARGETS}
 ${catkin_EXPORTED_TARGETS}
 )
+
 target_link_libraries(action_server
 ${catkin_LIBRARIES}
 	

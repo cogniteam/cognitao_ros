@@ -35,18 +35,18 @@
  */
 
 
-#include <cognitao_ros/server_example/MinimalActionServerExample.h>
+#include <cognitao_ros/server_example/RosActionServerExample.h>
 
 
-MinimalActionServerExample::MinimalActionServerExample()
-    : MinimalActionServer(){
+RosActionServerExample::RosActionServerExample()
+    : RosActionServer(){
 
     ros::NodeHandle n_;
     srv_client_get = n_.serviceClient<cognitao_ros::getvar>("server_get_var");
     srv_client_set = n_.serviceClient<cognitao_ros::setvar>("server_set_var");
 }
 
-void MinimalActionServerExample::loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+void RosActionServerExample::loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
 
     while (!server.isPreemptRequested(goal)){
 
@@ -59,22 +59,22 @@ void MinimalActionServerExample::loopStopReq(const actionlib::MultiGoalActionSer
     // stopReq = 1;
 }
 
-std::map<std::string, std::string> MinimalActionServerExample::getParam(const string &name) const{
+std::map<std::string, std::string> RosActionServerExample::getParam(const string &name) const{
 
     return parameters;
 }
 
-void MinimalActionServerExample::onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+void RosActionServerExample::onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
 
     // stopReq=0;
     execute(goal);
 }
 
-void MinimalActionServerExample::onStop(){
+void RosActionServerExample::onStop(){
     //stopReq=1;
 }
 
-void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
+void RosActionServerExample::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
 
     cout << " start execute " << goal.getGoal()->goal.actiontype << endl;
     const string goal_ = goal.getGoal()->goal.actiontype;
@@ -141,7 +141,7 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
 
     case generateRandom:
     {
-        // stopReqThread_ = std::thread(&MinimalActionServerExample::loopStopReq, this, goal);
+        // stopReqThread_ = std::thread(&RosActionServerExample::loopStopReq, this, goal);
         // stopReqThread_.detach();
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -177,7 +177,7 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
     break;
     case generateRandom2:
     {
-        // stopReqThread_ = std::thread(&MinimalActionServerExample::loopStopReq, this, goal);
+        // stopReqThread_ = std::thread(&RosActionServerExample::loopStopReq, this, goal);
         // stopReqThread_.detach();
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -267,7 +267,7 @@ void MinimalActionServerExample::execute(const actionlib::MultiGoalActionServer<
     cout << "ANSWER " << (int)result.resultvalue << endl;
 }
 
-action_code MinimalActionServerExample::hashit(std::string const &inString){
+action_code RosActionServerExample::hashit(std::string const &inString){
 
     if (inString == "waitRandom")
       return waitRandom;
