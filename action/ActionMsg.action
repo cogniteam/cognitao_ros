@@ -1,0 +1,8 @@
+# Goal
+cognitao_ros/GoalMsg goal 
+---
+# Result
+bool resultvalue
+---
+# Feedback
+string params
