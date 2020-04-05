@@ -72,8 +72,6 @@ bool Ros1Runner::run(){
     stopRequested = false;
     success = false;
 
-    
-    cout << " DO ACTION _____ " << action_ << endl;
     client_.waitForServer();
 
     actionGoal goalMsg;

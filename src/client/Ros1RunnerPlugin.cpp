@@ -35,7 +35,6 @@ extern "C" Runner *create_runner(){
 
 	if (!ros::isInitialized()){
 		
-		cout << "NOT INITIALIZE!!!!!" << endl;
 		int n = 0;
 		ros::init(n, nullptr, "cognitao_ros1");
 	}

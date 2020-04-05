@@ -52,7 +52,6 @@ void RosActionServer::execute(const actionlib::MultiGoalActionServer<cognitao_ro
 
     for (int i = 0; i < 20; i++){
 
-        //std::cout<<"doing mission.."<<std::endl;
     }
 
     server.setSucceeded(goal);

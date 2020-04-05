@@ -258,7 +258,6 @@ void RosActionServerExample::execute(const actionlib::MultiGoalActionServer<cogn
             std::cout << goal_ << " GOAL IS DONE!!" << std::endl;
             result.resultvalue = true;
             cout << "result value in Server: " << int(result.resultvalue) << endl;
-            // std::cout<<"2.PREEMPT IS ::::: "<<server.isPreemptRequested(goal);
 
             server.setSucceeded(goal, result);
         }

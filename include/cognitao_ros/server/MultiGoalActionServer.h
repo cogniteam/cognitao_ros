@@ -164,7 +164,6 @@ public:
         
         if (g != active_goals.end()){
 
-            // cout << "preempt is -> " << g->isPreemptReq << endl;
             return g->isPreemptReq;
         }
         return true;
@@ -197,7 +196,6 @@ public:
         boost::recursive_mutex::scoped_lock lock(lock_);
         ROS_DEBUG_NAMED("actionlib", "Setting the current goal as aborted");
         gh.setAborted(result, text);
-        std::cout << "res ans is :" << (int)result.resultvalue << std::endl;
 
         requestPreemption(gh);
     }
@@ -245,7 +243,6 @@ public:
         if (active_goals.size() > 0){
 
             bool found = true;
-            //std::cout<<"[dan] start search preempted goals for remove"<<std::endl;
             while (found){
 
                 found = false;
@@ -283,7 +280,6 @@ private:
         ROS_DEBUG_NAMED("actionlib", "A preempt has been received by the MGActionServer");
         ROS_INFO("actionlib: "
                  "A preempt has been received by the MGActionServer");
-        //std::cout<<"[dan]   GoalQueue::iterator i = new_goals.find(preempt)"<<std::endl;
         typename GoalQueue::iterator i = new_goals.find(preempt);
         if (i != new_goals.end()) {
 
