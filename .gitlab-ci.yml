@@ -2,7 +2,7 @@
 variables:
   APT_REPOSITORY: "cognitao"
   DEPEND_PACKAGES: "cognitao"
-  DEPLOY_CLOUD: "false"
+  DEPLOY_CLOUD: "true"
   
 include:
   - project: "cogniteam/develop"

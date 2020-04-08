@@ -33,28 +33,28 @@
 
 
 RosDataSource::RosDataSource(){
-
     if (!ros::isInitialized()){ 
         int n = 0;
         ros::init(n, nullptr, "cognitao_ros", ros::init_options::AnonymousName);
     }
 
-    ros::NodeHandle n_;
-    event_sub_ = n_.subscribe(
+    nh_ptr_ = std::unique_ptr<ros::NodeHandle>(new ros::NodeHandle);
+    
+    event_sub_ = nh_ptr_->subscribe(
             "/cognitao_ros/world_model/updates", 1000,
                     &RosDataSource::onDataSourceEvent, this);
 
 
-    event_pub_ = n_.advertise<cognitao_ros::EventMsg>(
+    event_pub_ = nh_ptr_->advertise<cognitao_ros::EventMsg>(
             "/cognitao_ros/world_model/updates", 1000);
-
-    spinTHread = std::thread(&RosDataSource::doSpin, this);
-
-    spinTHread.detach();
+            
+            
+    static ros::AsyncSpinner spinner(1); // Use 1 threads
+    spinner.start();
 }
 
 RosDataSource::~RosDataSource(){
-    spinTHread.join();
+    doShutDown(0);
 }
 
 bool RosDataSource::publishUpdateEvent(const string &name, const string &value){
@@ -71,6 +71,8 @@ void RosDataSource::onDataSourceEvent(const cognitao_ros::EventMsg &msg){
     DataSource::variableUpdated(msg.key, msg.value);
 }
 
-void RosDataSource::doSpin() {
-    ros::spin();
+
+void RosDataSource::doShutDown(int sig) {
+    cout<<"ROS exiting with signal " << sig <<endl;
+    ros::shutdown();
 }
