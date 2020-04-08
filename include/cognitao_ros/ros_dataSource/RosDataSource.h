@@ -80,15 +80,15 @@ protected:
      */
     void onDataSourceEvent(const cognitao_ros::EventMsg &msg);
 
-    void doSpin();
-
+    void doShutDown(int sig);
+    
 private:
-
+    
+    std::unique_ptr<ros::NodeHandle> nh_ptr_;
+    
     ros::Publisher event_pub_;
 
     ros::Subscriber event_sub_;
-
-    std::thread spinTHread;
 
     ros::ServiceServer serviceGetVar;
 
