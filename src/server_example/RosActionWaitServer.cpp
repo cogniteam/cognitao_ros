@@ -1,5 +1,5 @@
 /*
- * RosActionServerExample.h
+ * RosActionWaitServer.cpp
  * @author Lin Azan (lin@cogniteam.com)
  * @date 2020-03-15
  * @copyright Cogniteam (c) 2020
@@ -35,57 +35,34 @@
  */
 
 
-
-#include <thread>
-
-#include <cognitao_ros/server/RosActionServer.h>
-#include <cognitao_ros/setvar.h>
-#include <cognitao_ros/getvar.h>
-#include <cognitao_ros/EventMsg.h>
+#include <cognitao_ros/server_example/RosActionWaitServer.h>
 
 
-enum action_code
+RosActionWaitServer::RosActionWaitServer(ros::NodeHandle n, std::string action)
+    : RosActionServer(n,action)
 {
-  waitRandom,
-  wait,
-  generateRandom,
-  generateRandom2,
-  loop10,
-  defaultNum
-};
+
+}
 
 
-/**
- *implemantation example of RosActionServer
- */
-class RosActionServerExample : public RosActionServer{
+void RosActionWaitServer::execute(RosActionContext action){
 
-public:
+    cout << "time=======>" << action.getParameters()["time"].c_str() << endl;
+    int t = atoi(action.getParameters()["time"].c_str());
+    cout << "t is " << t << endl;
+    cout << "WAITING TASK" << endl;
+    for (int i = 0; i < t  ; i++)
+    {
 
-  explicit RosActionServerExample();
-  ~RosActionServerExample(){}
-
-public:
-
-  void loopStopReq(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal);
-
-  virtual std::map<std::string, std::string> getParam(const string &name) const;
-  
-  virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal);
-  
-  virtual void onStop(); //check
-
-  virtual void execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal) override;
-
-  action_code hashit(std::string const &inString);
-
-private:
-
-  std::thread stopReqThread_;
- 
-  int stopReq;
- 
-  ros::ServiceClient srv_client_get;
- 
-  ros::ServiceClient srv_client_set;
-};
+        cout << " executing wait " << i << endl;
+        if(action.isPreemptRequested())
+        {
+            cout << "Rain check on this " << endl;
+            action.setResult(false);
+            return;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    
+    action.setResult(true);
+}

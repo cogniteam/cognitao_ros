@@ -1,7 +1,7 @@
 /**
  * @brief 
  * 
- * @file RosDataSourcePlugin.cpp
+ * @file Ros1RunnerPlugin.cpp
  * 
  * @author Lin Azan (lin@cogniteam.com)
  * @date 2020-03-15
@@ -29,23 +29,20 @@
  * 
  */
 
+#include <cognitao_ros/runner/RosRunner.h>
 
-#include <cognitao_ros/ros_dataSource/RosDataSource.h>
-
-
-extern "C" DataSource *create_datasource(){
-
-    return new RosDataSource();
+extern "C" Runner *create_runner() 
+{
+	return new RosRunner();
 }
 
-extern "C" void destroy_datasource(DataSource *object)
+extern "C" void destroy_runner(Runner *object)
 {
-
-    delete object;
+	delete object;
 }
 
-extern "C" const char *get_datasource_type()
+extern "C" const char *get_runner_type()
 {
 
-    return "RosDataSource";
+	return "ros";
 }

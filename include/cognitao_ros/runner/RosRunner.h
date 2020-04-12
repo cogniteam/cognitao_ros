@@ -1,7 +1,7 @@
 /**
  * @brief ROS 1 cognitao runner 
  * 
- * @file Ros1Runner.h
+ * @file RosRunner.h
  * 
  * @author Lin Azan (lin@cogniteam.com)
  * @date 2020-03-15
@@ -30,42 +30,37 @@
  */
 
 
-#ifndef COGNITAO_ROS_ROS1RUNNER_H_
-#define COGNITAO_ROS_ROS1RUNNER_H_
+#ifndef COGNITAO_ROS_ROSRUNNER_H_
+#define COGNITAO_ROS_ROSRUNNER_H_
 
-
+#include <ros/xmlrpc_manager.h>
 #include <actionlib/client/simple_action_client.h>
 
-#include <cognitao_ros/ActionMsgAction.h> 
+#include <cognitao_ros/RunnerAction.h> 
 #include <cognitao/CogniTao.h>
 
+
 using namespace std;
-using actionType = cognitao_ros::ActionMsgAction;
-using actionFeedback = cognitao_ros::ActionMsgFeedbackConstPtr;
-using actionType = cognitao_ros::ActionMsgAction;
-using actionGoal = cognitao_ros::ActionMsgGoal;
 
-typedef actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> CL;
+using actionFeedback = cognitao_ros::RunnerFeedbackConstPtr;
+using actionType = cognitao_ros::RunnerAction;
+using actionGoal = cognitao_ros::RunnerGoal;
 
-
-// namespace cognitao_ros {
-// namespace runner {
+typedef actionlib::SimpleActionClient<cognitao_ros::RunnerAction> CL;
 
 
 /**
  * Allows to receive data, manage callback and publish da
  */
-class Ros1Runner : public Runner{
+class RosRunner : public Runner{
 
 public:
 
-    Ros1Runner();
-
-    Ros1Runner(const string &action,
-             std::map<std::string, std::string> parameters);
-
+    RosRunner();
+    ~RosRunner();
 public:  
 
+    virtual void setAction(const std::string &action);
     /**
      * @brief execute task
      * @return bool 
@@ -85,25 +80,18 @@ public:
 
 private:
 
-    void feedbackCb(const actionFeedback &feedback);
+    void feedbackCallback(const actionFeedback &feedback);
 
     /**
      * @brief update result when task done  
      */
     void doneCallback(const actionlib::SimpleClientGoalState &state,
-             const cognitao_ros::ActionMsgResultConstPtr &result);
+             const cognitao_ros::RunnerResultConstPtr &result);
 
-    actionlib::SimpleActionClient<cognitao_ros::ActionMsgAction> client_;
-
-    bool resultExist = false;
+    actionlib::SimpleActionClient<cognitao_ros::RunnerAction> *  client_;
 
     atomic<bool> stopRequested;
-
-    bool success;
 };
 
-// } /* namespace runners */
-// } /* namespace cognitao_ros */
 
-
-#endif /* COGNITAO_ROS_ROS1RUNNER_H_ */
+#endif /* COGNITAO_ROS_ROSRUNNER_H_ */

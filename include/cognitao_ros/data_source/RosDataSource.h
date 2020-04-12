@@ -44,7 +44,7 @@
 #include <cognitao/CogniTao.h>
 #include <cognitao/data_sources/DataSource.h>
 
-#include <cognitao_ros/EventMsg.h>
+#include <cognitao_ros/Event.h>
 
 using namespace std;
 
@@ -65,6 +65,7 @@ public:
         return DataSource::Ptr(new RosDataSource());
     }
 
+   void shutdown();
 protected:
 
     /**
@@ -78,10 +79,10 @@ protected:
      * @brief updates the world model
      * @return bool
      */
-    void onDataSourceEvent(const cognitao_ros::EventMsg &msg);
+    void onDataSourceEvent(const cognitao_ros::Event &msg);
 
-    void doShutDown(int sig);
-    
+
+ 
 private:
     
     std::unique_ptr<ros::NodeHandle> nh_ptr_;

@@ -1,5 +1,5 @@
 /*
- * RosActionServer.h
+ * RosActionServerExample.h
  * @author Lin Azan (lin@cogniteam.com)
  * @date 2020-03-15
  * @copyright Cogniteam (c) 2020
@@ -34,48 +34,25 @@
  *
  */
 
+#include <cognitao_ros/server/RosActionServer.h>
+#include <cognitao_ros/Event.h>
 
-#ifndef COGNITAO_ROS_ROSACTIONSERVER_H_
-#define COGNITAO_ROS_ROSACTIONSERVER_H_
 
-
-#include <string>
-#include <iostream>
-#include <thread>
-
-#include <cognitao_ros/RunnerAction.h>
-#include <cognitao_ros/server/MultiGoalActionServer.h>
-#include <cognitao_ros/server/RosActionContext.h>
-using namespace std;
 
 /**
- * manage client's requests
+ *implemantation example of RosActionServer
  */
-class RosActionServer {
+class RosActionWaitServer : public RosActionServer{
 
 public:
 
-  RosActionServer(ros::NodeHandle n,const std::string action);
+    explicit RosActionWaitServer(ros::NodeHandle n,std::string action);
+    ~RosActionWaitServer(){}
 
-  ~RosActionServer();
+    /**
+     * @brief Wait execution
+     * @param action 
+     */
+    virtual void execute(RosActionContext action) override;
 
-public:
-
-  virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>::GoalHandle &goal);
-
-  virtual void execute(RosActionContext actionContext)= 0;
-  
-  std::string & getActionName(){
-      return actionName_;
-  } 
-
-protected:
-
-  ros::NodeHandle nh_;
-  actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction> server_;
-  std::string actionName_;
- 
 };
-
-
-#endif 

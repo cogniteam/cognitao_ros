@@ -29,7 +29,7 @@
  * 
  */
 
-#include <cognitao_ros/ros_dataSource/RosDataSource.h>
+#include <cognitao_ros/data_source/RosDataSource.h>
 
 
 RosDataSource::RosDataSource(){
@@ -45,7 +45,7 @@ RosDataSource::RosDataSource(){
                     &RosDataSource::onDataSourceEvent, this);
 
 
-    event_pub_ = nh_ptr_->advertise<cognitao_ros::EventMsg>(
+    event_pub_ = nh_ptr_->advertise<cognitao_ros::Event>(
             "/cognitao_ros/world_model/updates", 1000);
             
             
@@ -54,11 +54,12 @@ RosDataSource::RosDataSource(){
 }
 
 RosDataSource::~RosDataSource(){
-    doShutDown(0);
+    shutdown();
+    ros::shutdown();
 }
 
 bool RosDataSource::publishUpdateEvent(const string &name, const string &value){
-    cognitao_ros::EventMsg msg;
+    cognitao_ros::Event msg;
 
     msg.key = name;
     msg.value = value;
@@ -67,12 +68,21 @@ bool RosDataSource::publishUpdateEvent(const string &name, const string &value){
 
     return true;
 }
-void RosDataSource::onDataSourceEvent(const cognitao_ros::EventMsg &msg){
+void RosDataSource::onDataSourceEvent(const cognitao_ros::Event &msg){
     DataSource::variableUpdated(msg.key, msg.value);
 }
 
-
-void RosDataSource::doShutDown(int sig) {
-    cout<<"ROS exiting with signal " << sig <<endl;
-    ros::shutdown();
+void RosDataSource::shutdown()
+{
+    //cout << "ROS:: closing publisher " << event_pub_.getTopic() << endl;
+    event_pub_.shutdown(); 
+    //cout << "ROS:: closing subscriber " << event_sub_.getTopic() << endl;
+    event_sub_.shutdown();
+    //cout << "ROS:: waiting for shutdown... "<< std::flush;
+    for(int i =0; i<5; i++ )
+    {
+        cout << i << " "<< std::flush;
+        sleep(1);
+    }
+    cout<< endl;
 }

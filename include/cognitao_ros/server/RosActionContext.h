@@ -1,14 +1,16 @@
-/*
- * RosActionServer.h
- * @author Lin Azan (lin@cogniteam.com)
- * @date 2020-03-15
+/**
+ * @brief 
+ * 
+ * @file RosActionContext.h
+ * 
+ * @author ari yakir (ari@cogniteam.com)
+ * @date 2020-04-16
  * @copyright Cogniteam (c) 2020
- *
- *
+ * 
  * Cogniteam LTD CONFIDENTIAL
- *
- * Unpublished Copyright (c) 2010-2020 Cogniteam,        All Rights Reserved.
- *
+ *   
+ * Unpublished Copyright (c) 2016-2017 Cogniteam,        All Rights Reserved.
+ *    
  * NOTICE:  All information contained  herein  is,  and  remains the property
  * of Cogniteam.   The   intellectual   and   technical   concepts  contained
  * herein are proprietary to Cogniteam and may  be  covered  by  Israeli  and
@@ -19,7 +21,7 @@
  * is hereby   forbidden   to   anyone  except  current  Cogniteam employees,
  * managers   or   contractors   who   have   executed   Confidentiality  and
  * Non-disclosure    agreements    explicitly    covering     such     access
- *
+ *    
  * The copyright notice  above  does  not  evidence  any  actual  or intended
  * publication  or  disclosure    of    this  source  code,   which  includes
  * information that is confidential  and/or  proprietary,  and  is  a   trade
@@ -31,51 +33,64 @@
  * INFORMATION DOES  NOT CONVEY OR IMPLY ANY RIGHTS  TO  REPRODUCE,  DISCLOSE
  * OR  DISTRIBUTE ITS CONTENTS, OR TO  MANUFACTURE,  USE,  OR  SELL  ANYTHING
  * THAT      IT     MAY     DESCRIBE,     IN     WHOLE     OR     IN     PART
- *
+ * 
  */
-
-
-#ifndef COGNITAO_ROS_ROSACTIONSERVER_H_
-#define COGNITAO_ROS_ROSACTIONSERVER_H_
-
-
-#include <string>
-#include <iostream>
-#include <thread>
+#ifndef COGNITAO_ROS_ROSACTIONCONTEXT_H_
+#define COGNITAO_ROS_ROSACTIONCONTEXT_H_
 
 #include <cognitao_ros/RunnerAction.h>
 #include <cognitao_ros/server/MultiGoalActionServer.h>
-#include <cognitao_ros/server/RosActionContext.h>
-using namespace std;
 
-/**
- * manage client's requests
- */
-class RosActionServer {
 
-public:
+class RosActionContext {
+public:    
+    /**
+     * @brief Construct a new Action Context object
+     * @param goal 
+     */
+    RosActionContext  (
+        const actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>::GoalHandle & goal,
+        actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>* server)
+    {
+        server_ = server;
+        goal_ = goal;
+        for (auto const &param : goal.getGoal()->action.parameters){
 
-  RosActionServer(ros::NodeHandle n,const std::string action);
+            parameters_[param.key] = param.value;
+            cout << "key" << param.key << endl;
+            cout << "val" << param.value << endl;
+        }
+    }
 
-  ~RosActionServer();
+    std::map<std::string, std::string> getParameters() const{
+        return parameters_;
+    }
 
-public:
+    bool isPreemptRequested()
+    {
+        return server_->isPreemptRequested(goal_);
+    }
 
-  virtual void onStart(const actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>::GoalHandle &goal);
+    void setResult(bool value)
+    {
+        cognitao_ros::RunnerResult result;
+        result.resultvalue  = value;
+        server_->setSucceeded(goal_,result);
+        cout << "[ goal " << value << " ]" << endl;
+    }
 
-  virtual void execute(RosActionContext actionContext)= 0;
-  
-  std::string & getActionName(){
-      return actionName_;
-  } 
+private:
+    /**
+     * @brief a goal 
+     */
+    actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>::GoalHandle goal_;
+    
+    /**
+     * @brief parameters from the goal
+     */
+    std::map<std::string, std::string> parameters_;
+    
+    actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction> * server_;
 
-protected:
-
-  ros::NodeHandle nh_;
-  actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction> server_;
-  std::string actionName_;
- 
 };
-
-
-#endif 
+#endif /* COGNITAO_ROS_ROSACTIONCONTEXT_H_ */
