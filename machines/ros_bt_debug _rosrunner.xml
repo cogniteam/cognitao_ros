@@ -1,7 +1,0 @@
-<plan name="testBT">
-	<loop name="Main mission loop" variable="1">
-	         <condition name="Docking succeeded" variable="Docked" operation="=" value="true"/>
-	         <wait name="wait" description="wait for power" value="3"/>
-	         <task name="Report" runner="ros1" action="wait" param_time="$time" />
-   </loop>
-</plan>

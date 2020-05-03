@@ -1,3 +1,2 @@
-string actiontype
 KeyValue[] parameters
 

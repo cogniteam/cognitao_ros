@@ -135,6 +135,7 @@ public:
 
     MultiGoalActionServer(ros::NodeHandle n, std::string name, ExecuteCallback execute_callback, bool auto_start) : n_(n), execute_callback_(execute_callback), need_to_terminate_(false){
 
+
         //create the action server
         as_ = boost::shared_ptr<ActionServer<ActionSpec>>(
             new ActionServer<ActionSpec>(
@@ -152,7 +153,10 @@ public:
     ~MultiGoalActionServer()
     {
         if (execute_thread_)
+        {
+            cout << " MultiGoalServer exiting" <<endl;
             shutdown();
+        }
     }
 
 public:

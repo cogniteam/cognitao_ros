@@ -38,23 +38,20 @@
 #include <cognitao_ros/server/RosActionServer.h>
 
 
-RosActionServer::RosActionServer() : server(nh_, "cognitao_ros",
-                                                    boost::bind(&RosActionServer::execute, this, _1), false){
-
-    std::cout << "server is running.." << std::endl;
-
-    server.start(); //start the server running
+RosActionServer::RosActionServer(ros::NodeHandle n,std::string action) :
+    server_(n, action,boost::bind(&RosActionServer::onStart, this, _1), false)
+{
+    std::cout << "server " << action << " is running.." << std::endl;
+    server_.start(); //start the server running
 }
 
-RosActionServer::~RosActionServer(void) {}
-
-void RosActionServer::execute(const actionlib::MultiGoalActionServer<cognitao_ros::ActionMsgAction>::GoalHandle &goal){
-
-    for (int i = 0; i < 20; i++){
-
-    }
-
-    server.setSucceeded(goal);
-    
-    cout << "finished " << endl;
+RosActionServer::~RosActionServer() {
+    // TODO CLOSE SERVER AND ACTIONS
 }
+
+
+void RosActionServer::onStart(const actionlib::MultiGoalActionServer<cognitao_ros::RunnerAction>::GoalHandle &goal){
+    RosActionContext actionContext(goal,&server_);
+    execute(actionContext);
+}
+

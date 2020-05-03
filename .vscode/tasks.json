@@ -21,6 +21,13 @@
             "group": "build"
         },
         {
+            "label": "make install [debug]",
+            "type": "shell",
+            "command": "mkdir build -p && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j8 && make install",
+            "problemMatcher": [ "$gcc" ],
+            "group": "build"
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "rm build/ -rf",
