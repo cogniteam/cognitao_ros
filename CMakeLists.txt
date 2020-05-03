@@ -15,11 +15,9 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs   
 )
 
-find_package(Threads)
-
 include_directories(
-	include
-	${catkin_INCLUDE_DIRS} 
+  include
+  ${catkin_INCLUDE_DIRS} 
 )
 
 add_message_files(
@@ -37,9 +35,12 @@ add_service_files(
 
 add_action_files(DIRECTORY action FILES Runner.action)
 
-generate_messages(DEPENDENCIES std_msgs actionlib_msgs )
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs)
 
-catkin_package()
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES cognitao_ros_action_server
+)
 
 #
 # Build
@@ -50,17 +51,17 @@ catkin_package()
 #
 
 add_library(cognitao_ros_runner SHARED
- src/runner/RosRunnerPlugin.cpp
- src/runner/RosRunner.cpp 
+  src/runner/RosRunnerPlugin.cpp
+  src/runner/RosRunner.cpp 
 )
 
 add_dependencies(cognitao_ros_runner
-${${PROJECT_NAME}_EXPORTED_TARGETS}
-${catkin_EXPORTED_TARGETS}
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
 )
 	  
 target_link_libraries(cognitao_ros_runner
-${catkin_LIBRARIES}	
+  ${catkin_LIBRARIES}
 )
 
 #
@@ -73,59 +74,42 @@ add_library(cognitao_ros_datasource SHARED
 )
 
 add_dependencies(cognitao_ros_datasource
-${${PROJECT_NAME}_EXPORTED_TARGETS}
-${catkin_EXPORTED_TARGETS}
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
 )
 	  
 target_link_libraries(cognitao_ros_datasource
-${catkin_LIBRARIES}	
+  ${catkin_LIBRARIES}	
 )
 
 #
-# Ros action server
+# Action server
 #
-
-add_executable(action_server_not_composable
- src/server/action_server_main.cpp
- src/server/RosActionServer.cpp
- )
-
-add_dependencies(action_server_not_composable
-${${PROJECT_NAME}_EXPORTED_TARGETS}
-${catkin_EXPORTED_TARGETS}
+add_library(cognitao_ros_action_server SHARED
+  src/server/RosActionServer.cpp
 )
 
-target_link_libraries(action_server_not_composable
-${catkin_LIBRARIES})
-
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+add_dependencies(cognitao_ros_action_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
 )
-
-#
-# Action server executable example
-#
-
-add_executable(action_server 
-src/server_example/main.cpp
-src/server/RosActionServer.cpp
-src/server_example/RosActionWaitServer.cpp
+	  
+target_link_libraries(cognitao_ros_action_server
+  ${catkin_LIBRARIES}	
 )
-
-
-add_dependencies(action_server
-${${PROJECT_NAME}_EXPORTED_TARGETS}
-${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(action_server
-${catkin_LIBRARIES}	
-)
-
 
 install(TARGETS
-cognitao_ros_datasource
-cognitao_ros_runner
-DESTINATION /usr/lib/cognitao/plugins/
+  cognitao_ros_datasource
+  cognitao_ros_runner
+  DESTINATION /usr/lib/cognitao/plugins/
+)
+
+install(TARGETS cognitao_ros_action_server
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )

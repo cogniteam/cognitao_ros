@@ -59,7 +59,7 @@ RosRunner::~RosRunner()
 }
 
 void RosRunner::setAction(const std::string &action){
-  client_ = new actionlib::SimpleActionClient<cognitao_ros::RunnerAction>(action, true);
+    client_ = new actionlib::SimpleActionClient<cognitao_ros::RunnerAction>(action, true);
 }
 
 bool RosRunner::run(){
@@ -73,7 +73,7 @@ bool RosRunner::run(){
 
     actionGoal goalMsg;
     
-    for (auto const &x : parameters_){
+    for (auto const &x : getParameters()){
 
         cognitao_ros::KeyValue param;
         param.key = x.first;
