@@ -13,6 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib 
   genmsg
   actionlib_msgs   
+  ros_type_introspection 
+  topic_tools
+  abseil_cpp
 )
 
 include_directories(
@@ -35,7 +38,25 @@ add_service_files(
 
 add_action_files(DIRECTORY action FILES Runner.action)
 
+
 generate_messages(DEPENDENCIES std_msgs actionlib_msgs)
+
+catkin_package(
+    INCLUDE_DIRS
+    LIBRARIES ros_type_introspection
+    CATKIN_DEPENDS
+    rosbag
+    rosbag_storage
+    topic_tools
+    sensor_msgs
+    geometry_msgs
+    message_runtime
+    topic_tools
+    abseil_cpp
+    DEPENDS
+)
+
+
 
 catkin_package(
   INCLUDE_DIRS include
@@ -97,6 +118,24 @@ add_dependencies(cognitao_ros_action_server
 target_link_libraries(cognitao_ros_action_server
   ${catkin_LIBRARIES}	
 )
+
+#
+# tools
+#
+add_executable(cognitao_topics
+  src/executables/topics.cpp
+)
+
+
+target_link_libraries(cognitao_topics
+  cognitao_core
+  ${catkin_LIBRARIES}	
+)
+
+
+#
+# Install
+#
 
 install(TARGETS
   cognitao_ros_datasource
